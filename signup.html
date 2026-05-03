@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SheDrives · Sign up</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .error-text { color: #ef4444; font-size: 0.7rem; margin-top: 0.25rem; display: block; }
+        .error-border { border-color: #ef4444 !important; background-color: #fff5f5 !important; }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <nav class="w-full py-4 px-6 bg-white shadow-sm"><div class="max-w-7xl mx-auto flex justify-between"><a href="index.html" class="font-bold text-2xl gradient-text">SheDrives</a><a href="login.html" class="text-[#6A4E8F]">Log in</a></div></nav>
+    <div class="flex min-h-[80vh] items-center justify-center px-4">
+        <div class="card-default p-8 max-w-md w-full">
+            <h2 class="text-3xl font-bold text-center">Create account</h2>
+            <form id="signupForm" novalidate>
+                <div class="mb-4">
+                    <label>Full name *</label>
+                    <input type="text" id="signupName" class="w-full border rounded-xl px-4 py-3">
+                    <span class="error-text hidden" id="nameError">Enter a valid name (only letters & spaces, min 3 characters).</span>
+                </div>
+                <div class="mb-4">
+                    <label>Email *</label>
+                    <input type="email" id="signupEmail" class="w-full border rounded-xl px-4 py-3">
+                    <span class="error-text hidden" id="emailError">Enter a valid email address.</span>
+                </div>
+                <div class="mb-6">
+                    <label>Password *</label>
+                    <input type="password" id="signupPassword" class="w-full border rounded-xl px-4 py-3">
+                    <span class="error-text hidden" id="passwordError">Password must be at least 6 characters.</span>
+                </div>
+                <button type="submit" class="w-full gradient-bg text-white font-bold py-3 rounded-xl">Sign up</button>
+                <div id="signupError" class="text-red-500 text-center mt-3 text-sm hidden"></div>
+            </form>
+        </div>
+    </div>
+    <script>
+        const nameInput = document.getElementById('signupName');
+        const emailInput = document.getElementById('signupEmail');
+        const passwordInput = document.getElementById('signupPassword');
+        const form = document.getElementById('signupForm');
+        const errorDiv = document.getElementById('signupError');
+        
+        const nameRegex = /^[A-Za-zÀ-ÿ]{2,}(?: [A-Za-zÀ-ÿ]+){1,}$/;
+        const emailRegex = /^[^\s@]+@([^\s@.,]+\.)+[^\s@.,]{2,}$/;
+        
+        function validateName() {
+            const val = nameInput.value.trim();
+            const isValid = nameRegex.test(val);
+            const errorSpan = document.getElementById('nameError');
+            if (!isValid) {
+                nameInput.classList.add('error-border');
+                errorSpan.classList.remove('hidden');
+            } else {
+                nameInput.classList.remove('error-border');
+                errorSpan.classList.add('hidden');
+            }
+            return isValid;
+        }
+        function validateEmail() {
+            const val = emailInput.value.trim();
+            const isValid = emailRegex.test(val);
+            const errorSpan = document.getElementById('emailError');
+            if (!isValid) {
+                emailInput.classList.add('error-border');
+                errorSpan.classList.remove('hidden');
+            } else {
+                emailInput.classList.remove('error-border');
+                errorSpan.classList.add('hidden');
+            }
+            return isValid;
+        }
+        function validatePassword() {
+            const val = passwordInput.value;
+            const isValid = val.length >= 6;
+            const errorSpan = document.getElementById('passwordError');
+            if (!isValid) {
+                passwordInput.classList.add('error-border');
+                errorSpan.classList.remove('hidden');
+            } else {
+                passwordInput.classList.remove('error-border');
+                errorSpan.classList.add('hidden');
+            }
+            return isValid;
+        }
+        
+        nameInput.addEventListener('input', validateName);
+        emailInput.addEventListener('input', validateEmail);
+        passwordInput.addEventListener('input', validatePassword);
+        
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const isNameValid = validateName();
+            const isEmailValid = validateEmail();
+            const isPasswordValid = validatePassword();
+            
+            if (isNameValid && isEmailValid && isPasswordValid) {
+                let users = JSON.parse(localStorage.getItem('sheDrivesUsers') || '[]');
+                const email = emailInput.value.trim().toLowerCase(); // store email in lowercase for case-insensitive login
+                if (users.find(u => u.email === email)) {
+                    errorDiv.classList.remove('hidden');
+                    errorDiv.innerText = 'Email already exists. Please login.';
+                    return;
+                }
+                const newUser = {
+                    name: nameInput.value.trim(),
+                    email: email,
+                    password: passwordInput.value, // store as entered
+                    joined: new Date().toISOString()
+                };
+                users.push(newUser);
+                localStorage.setItem('sheDrivesUsers', JSON.stringify(users));
+                // Redirect to login page
+                window.location.href = 'login.html';
+            } else {
+                errorDiv.classList.remove('hidden');
+                errorDiv.innerText = 'Please fix all errors above.';
+            }
+        });
+    </script>
+</body>
+</html>

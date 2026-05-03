@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>SheDrives · Live Ride Tracking</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Leaflet CSS + JS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        #map { height: 500px; width: 100%; border-radius: 1rem; z-index: 1; }
+        .leaflet-control-attribution { font-size: 9px; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- ================= NAVBAR ================= -->
+    <nav class="w-full py-5 px-6 md:px-12 lg:px-24 bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto flex justify-between items-center flex-wrap gap-4">
+            <a href="index.html" class="flex items-center gap-2">
+                <div class="w-9 h-9 rounded-full gradient-bg flex items-center justify-center shadow-md">
+                    <i class="fas fa-venus text-white text-sm"></i>
+                </div>
+                <span class="font-bold text-2xl tracking-tight gradient-text">SheDrives</span>
+            </a>
+            <div class="hidden md:flex items-center gap-6 font-medium text-gray-700">
+                <a href="index.html">Home</a>
+                <a href="contact.html">Contact</a>
+                <a href="weather.html">Weather</a>
+                <a href="location.html" class="text-[#6A4E8F] font-semibold">Location</a>
+                <div id="authNavLinks" class="flex gap-3 ml-2"></div>
+            </div>
+            <button id="mobileMenuBtn" class="md:hidden text-2xl text-gray-700"><i class="fas fa-bars"></i></button>
+        </div>
+        <div id="mobileMenu" class="fixed inset-0 bg-white z-50 transform translate-x-full transition-transform duration-300 md:hidden">
+            <div class="flex justify-end p-6"><button id="closeMenuBtn" class="text-2xl"><i class="fas fa-times"></i></button></div>
+            <div class="flex flex-col items-center gap-7 text-xl font-medium pt-10">
+                <a href="index.html">Home</a>
+                <a href="contact.html">Contact</a>
+                <a href="weather.html">Weather</a>
+                <a href="location.html">Location</a>
+                <div id="mobileAuthLinks" class="pt-4 flex flex-col gap-4 w-3/4"></div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-6xl mx-auto px-4 md:px-8 py-10">
+        <div class="card-default p-6 md:p-8">
+            <h1 class="text-3xl font-bold flex items-center gap-3"><i class="fas fa-map-marked-alt text-[#6A4E8F]"></i> Live ride tracking</h1>
+            <p class="text-gray-500 mt-1">See your real‑time location, set your destination, and watch the blue route shrink as you move.</p>
+
+            <!-- Destination input & controls -->
+            <div class="flex flex-col md:flex-row gap-4 mt-6">
+                <div class="flex-1">
+                    <input type="text" id="destinationInput" placeholder="Enter destination (e.g., Clifton, Karachi)" class="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#6A4E8F]">
+                </div>
+                <button id="setDestinationBtn" class="gradient-bg text-white px-6 py-3 rounded-xl font-bold shadow-md">📍 Set destination</button>
+                <button id="centerMyLocationBtn" class="border border-[#6A4E8F] text-[#6A4E8F] px-6 py-3 rounded-xl font-bold hover:bg-[#6A4E8F]/10 transition"><i class="fas fa-location-dot mr-1"></i> Center on me</button>
+            </div>
+
+            <!-- Map container -->
+            <div id="map" class="mt-6 rounded-2xl overflow-hidden shadow-lg"></div>
+
+            <!-- Info panel -->
+            <div id="trackingInfo" class="mt-4 bg-gray-50 p-4 rounded-xl text-center font-medium text-gray-700">
+                <i class="fas fa-info-circle text-[#6A4E8F] mr-2"></i> Enter a destination to start tracking.
+            </div>
+
+            <!-- SOS button -->
+            <div class="mt-6 flex justify-center">
+                <button id="sosBtnTracking" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded-xl shadow-md transition flex items-center gap-2"><i class="fas fa-exclamation-triangle"></i> SOS Emergency (share location)</button>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-900 text-gray-300 py-12 mt-12">
+        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div><div class="flex items-center gap-2"><div class="w-8 h-8 rounded-full bg-white/20 flex justify-center items-center"><i class="fas fa-venus text-white"></i></div><span class="font-bold text-xl text-white">SheDrives</span></div><p class="text-sm mt-3">Safe rides, women drivers.</p></div>
+            <div><h4 class="font-semibold text-white">Company</h4><ul class="mt-3 space-y-2 text-sm"><li>About us</li><li>Safety center</li></ul></div>
+            <div><h4 class="font-semibold text-white">Support</h4><ul class="mt-3 space-y-2 text-sm"><li>Help center</li><li>Contact support</li></ul></div>
+            <div><h4 class="font-semibold text-white">Legal</h4><ul class="mt-3 space-y-2 text-sm"><li>Privacy policy</li></ul></div>
+        </div>
+        <div class="text-center text-xs text-gray-500 mt-8">© 2025 SheDrives — Live ride companion</div>
+    </footer>
+
+    <script src="auth.js"></script>
+    <script>
+        // ================= MAP INITIALIZATION =================
+        let map;
+        let currentLocationMarker = null;
+        let destinationMarker = null;
+        let routeLine = null;
+        let watchId = null;
+        let currentLat = null, currentLng = null;
+        let destLat = null, destLng = null;
+
+        const defaultCenter = [24.8607, 67.0011]; // Karachi
+
+        function initMap() {
+            map = L.map('map').setView(defaultCenter, 13);
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; CartoDB',
+                subdomains: 'abcd',
+                maxZoom: 19
+            }).addTo(map);
+        }
+
+        // Geocode address to coordinates (Nominatim)
+        async function geocodeAddress(address) {
+            const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address)}&format=json&limit=1`;
+            const response = await fetch(url);
+            const data = await response.json();
+            if (data && data[0]) {
+                return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) };
+            }
+            throw new Error('Destination not found');
+        }
+
+        // Get road-following route from OSRM (free, no API key)
+        async function getRouteFromOSRM(startLat, startLng, endLat, endLng) {
+            const url = `https://router.project-osrm.org/route/v1/driving/${startLng},${startLat};${endLng},${endLat}?overview=full&geometries=geojson`;
+            const response = await fetch(url);
+            const data = await response.json();
+            if (data.code === 'Ok' && data.routes && data.routes.length > 0) {
+                const coords = data.routes[0].geometry.coordinates; // [lng, lat]
+                // Convert to Leaflet format [lat, lng]
+                return coords.map(coord => [coord[1], coord[0]]);
+            } else {
+                throw new Error('No route found');
+            }
+        }
+
+        // Update route line using OSRM (road network)
+        async function updateRouteLine() {
+            if (routeLine) map.removeLayer(routeLine);
+            if (currentLat && currentLng && destLat && destLng) {
+                try {
+                    const roadLatLngs = await getRouteFromOSRM(currentLat, currentLng, destLat, destLng);
+                    if (roadLatLngs && roadLatLngs.length > 0) {
+                        routeLine = L.polyline(roadLatLngs, {
+                            color: '#0077ff',
+                            weight: 5,
+                            opacity: 0.8
+                        }).addTo(map);
+                        
+                        // Calculate distance along route
+                        let distance = 0;
+                        for (let i = 0; i < roadLatLngs.length - 1; i++) {
+                            distance += getDistanceFromLatLonInKm(
+                                roadLatLngs[i][0], roadLatLngs[i][1],
+                                roadLatLngs[i+1][0], roadLatLngs[i+1][1]
+                            );
+                        }
+                        const distanceText = distance < 1 ? `${Math.round(distance * 1000)} m` : `${distance.toFixed(2)} km`;
+                        document.getElementById('trackingInfo').innerHTML = `
+                            <i class="fas fa-road text-[#6A4E8F] mr-2"></i> 
+                            <span class="font-medium">Remaining distance:</span> ${distanceText}
+                            <br><span class="text-sm text-gray-500">Route follows roads (OSRM).</span>
+                        `;
+                        // Fit map to route bounds
+                        const bounds = L.latLngBounds(roadLatLngs);
+                        map.fitBounds(bounds);
+                    } else {
+                        document.getElementById('trackingInfo').innerHTML = `<span class="text-red-500">Could not calculate road route. Try different destination.</span>`;
+                    }
+                } catch (err) {
+                    console.error(err);
+                    document.getElementById('trackingInfo').innerHTML = `<span class="text-red-500">Routing error: ${err.message}</span>`;
+                }
+            } else if (currentLat && currentLng) {
+                document.getElementById('trackingInfo').innerHTML = `<i class="fas fa-map-marker-alt text-green-600 mr-2"></i> Live location active. Set a destination to start tracking.`;
+            }
+        }
+
+        function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+            const R = 6371;
+            const dLat = deg2rad(lat2 - lat1);
+            const dLon = deg2rad(lon2 - lon1);
+            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                      Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+                      Math.sin(dLon/2) * Math.sin(dLon/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return R * c;
+        }
+        function deg2rad(deg) { return deg * (Math.PI/180); }
+
+        // Update current location marker
+        function updateCurrentLocation(lat, lng) {
+            if (currentLocationMarker) map.removeLayer(currentLocationMarker);
+            currentLocationMarker = L.marker([lat, lng], {
+                icon: L.divIcon({
+                    className: 'custom-div-icon',
+                    html: '<div style="background-color:#6A4E8F; width:16px; height:16px; border-radius:50%; border:3px solid white; box-shadow:0 0 4px black;"></div>',
+                    iconSize: [16,16],
+                    popupAnchor: [0,0]
+                })
+            }).addTo(map);
+            currentLocationMarker.bindPopup('<b>You are here</b>').openPopup();
+            currentLat = lat;
+            currentLng = lng;
+            if (destLat && destLng) {
+                updateRouteLine(); // recalc route when location changes
+            }
+        }
+
+        // Watch user location
+        function startWatchingLocation() {
+            if (watchId) navigator.geolocation.clearWatch(watchId);
+            watchId = navigator.geolocation.watchPosition(
+                (position) => {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+                    updateCurrentLocation(lat, lng);
+                    if (!destLat && !destLng) {
+                        map.setView([lat, lng], 15);
+                    }
+                },
+                (error) => {
+                    console.error(error);
+                    document.getElementById('trackingInfo').innerHTML = '<span class="text-red-500"><i class="fas fa-exclamation-triangle"></i> Could not get your location. Please enable GPS.</span>';
+                },
+                { enableHighAccuracy: true, maximumAge: 5000, timeout: 10000 }
+            );
+        }
+
+        // Set destination
+        async function setDestination() {
+            const address = document.getElementById('destinationInput').value.trim();
+            if (!address) {
+                alert('Please enter a destination.');
+                return;
+            }
+            try {
+                document.getElementById('trackingInfo').innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Finding destination and calculating road route...';
+                const coords = await geocodeAddress(address);
+                destLat = coords.lat;
+                destLng = coords.lng;
+                if (destinationMarker) map.removeLayer(destinationMarker);
+                destinationMarker = L.marker([destLat, destLng], {
+                    icon: L.divIcon({
+                        className: 'custom-div-icon',
+                        html: '<div style="background-color:#22c55e; width:18px; height:18px; border-radius:50%; border:3px solid white;"></div>',
+                        iconSize: [18,18]
+                    })
+                }).addTo(map);
+                destinationMarker.bindPopup(`<b>Destination:</b> ${address}`).openPopup();
+                
+                if (currentLat && currentLng) {
+                    await updateRouteLine();
+                } else {
+                    document.getElementById('trackingInfo').innerHTML = '<i class="fas fa-map-marker-alt text-green-600 mr-2"></i> Destination set. Waiting for current location...';
+                    map.setView([destLat, destLng], 14);
+                }
+            } catch (err) {
+                alert('Could not find that destination. Try a different name.');
+                document.getElementById('trackingInfo').innerHTML = '<span class="text-red-500">Destination not found. Please try again.</span>';
+            }
+        }
+
+        function centerOnMe() {
+            if (currentLat && currentLng) {
+                map.setView([currentLat, currentLng], 16);
+            } else {
+                alert('Waiting for your location. Please allow GPS access.');
+            }
+        }
+
+        function sosEmergency() {
+            if (currentLat && currentLng) {
+                const mapsLink = `https://www.google.com/maps?q=${currentLat},${currentLng}`;
+                alert(`🚨 SOS EMERGENCY\n\nYour current coordinates:\n${currentLat.toFixed(6)}, ${currentLng.toFixed(6)}\n\n📍 Google Maps: ${mapsLink}\n\nThis alert has been sent to the nearest police station (simulated). Help is on the way.`);
+            } else {
+                alert('Unable to get your location. Please enable GPS and try again.');
+            }
+        }
+
+        // Initialization
+        document.addEventListener('DOMContentLoaded', () => {
+            initMap();
+            if (navigator.geolocation) {
+                startWatchingLocation();
+            } else {
+                document.getElementById('trackingInfo').innerHTML = '<span class="text-red-500">Geolocation not supported by your browser.</span>';
+            }
+            document.getElementById('setDestinationBtn').addEventListener('click', setDestination);
+            document.getElementById('centerMyLocationBtn').addEventListener('click', centerOnMe);
+            document.getElementById('sosBtnTracking').addEventListener('click', sosEmergency);
+        });
+
+        // Mobile menu
+        const menuBtn = document.getElementById('mobileMenuBtn');
+        const closeBtn = document.getElementById('closeMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        if(menuBtn && closeBtn && mobileMenu) {
+            menuBtn.onclick = () => mobileMenu.classList.remove('translate-x-full');
+            closeBtn.onclick = () => mobileMenu.classList.add('translate-x-full');
+        }
+    </script>
+
+<script>
+    function updateLocationLink() {
+        const activeRide = localStorage.getItem('activeRide');
+        const isActive = activeRide && (Date.now() - (JSON.parse(activeRide).timestamp || 0) < 3600000);
+        const target = isActive ? 'tracking.html' : 'location.html';
+        const links = document.querySelectorAll('#locationNavLink, #mobileLocationLink');
+        links.forEach(link => { if(link) link.href = target; });
+    }
+    updateLocationLink();
+    window.addEventListener('storage', updateLocationLink);
+</script>
+
+
+<script>
+    function updateLocationLink() {
+        const activeRide = localStorage.getItem('activeRide');
+        const isActive = activeRide && (Date.now() - (JSON.parse(activeRide).timestamp || 0) < 3600000);
+        const target = isActive ? 'tracking.html' : 'location.html';
+        document.querySelectorAll('#locationNavLink, #mobileLocationLink').forEach(link => { if(link) link.href = target; });
+    }
+    updateLocationLink();
+    window.addEventListener('storage', updateLocationLink);
+</script>
+
+
+
+</body>
+
+
+
+
+</html>

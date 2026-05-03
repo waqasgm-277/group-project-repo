@@ -1,0 +1,59 @@
+/* style.css - shared across all SheDrives pages */
+* { font-family: 'Inter', sans-serif; }
+body { background: #FEFCFB; scroll-behavior: smooth; }
+.gradient-bg {
+    background: linear-gradient(135deg, #2A1E3D 0%, #3C2A5F 50%, #6A4E8F 100%);
+}
+.gradient-text {
+    background: linear-gradient(135deg, #2A1E3D, #6A4E8F);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+.btn-primary {
+    transition: all 0.25s ease;
+    box-shadow: 0 8px 18px rgba(106, 78, 143, 0.25);
+}
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 28px rgba(106, 78, 143, 0.3);
+}
+.card-default {
+    background: white;
+    border-radius: 1.25rem;
+    box-shadow: 0 12px 25px -8px rgba(0, 0, 0, 0.08), 0 4px 8px rgba(0, 0, 0, 0.02);
+    border: 1px solid rgba(106, 78, 143, 0.12);
+    transition: all 0.3s cubic-bezier(0.2, 0, 0, 1);
+}
+.card-default:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 28px 35px -12px rgba(106, 78, 143, 0.2);
+}
+.step-number {
+    background: linear-gradient(120deg, #6A4E8F, #8B6BB3);
+}
+.hero-mockup {
+    background: rgba(255,255,245,0.95);
+    border-radius: 2rem;
+}
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    ring: 2px solid #8B6BB3;
+    border-color: #8B6BB3;
+}
+
+.hourly-scroll::-webkit-scrollbar {
+    height: 6px;
+}
+.hourly-scroll::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+.hourly-scroll::-webkit-scrollbar-thumb {
+    background: #6A4E8F;
+    border-radius: 10px;
+}
+
+.animate-slide-in { animation: slideIn 0.3s ease; }
+@keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
