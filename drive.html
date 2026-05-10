@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>SheDrives · Become a Driver</title>
+    <title>FemGO · Become a Driver</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -40,31 +40,39 @@
             background: #9ca3af;
             cursor: not-allowed;
         }
+        .file-name {
+            font-size: 0.75rem;
+            color: #6b7280;
+            margin-top: 0.25rem;
+        }
+        .logo-img {
+            max-height: 90px;
+            width: auto;
+        }
     </style>
 </head>
 <body class="antialiased">
 
-    <!-- ================= NAVBAR (same as your website) ================= -->
-    <nav class="w-full py-5 px-6 md:px-12 lg:px-24 bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
-        <div class="max-w-7xl mx-auto flex justify-between items-center flex-wrap gap-4">
-            <a href="index.html" class="flex items-center gap-2">
-                <div class="w-9 h-9 rounded-full gradient-bg flex items-center justify-center shadow-md"><i class="fas fa-venus text-white text-sm"></i></div>
-                <span class="font-bold text-2xl tracking-tight gradient-text">SheDrives</span>
-            </a>
+    <!-- ================= NAVBAR (FemGO – same as index) ================= -->
+    <nav class="w-full py-3 px-6 md:px-12 lg:px-24 bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center">
+                <img src="/logo.png" alt="FemGO Logo" class="logo-img">
+            </div>
             <div class="hidden md:flex items-center gap-6 font-medium text-gray-700">
-                <a href="index.html">Home</a>
-                <a href="index.html#how-it-works">How it works</a>
-                <a href="index.html#safety">Safety</a>
-                <a href="contact.html">Contact</a>
-                <a href="weather.html">Weather</a>
-                <a href="location.html">Location</a>
+                <a href="index.html" class="hover:text-[#5B3A7A] transition text-md">Home</a>
+                <a href="index.html#how-it-works" class="hover:text-[#5B3A7A] transition text-md">How it works</a>
+                <a href="index.html#safety" class="hover:text-[#5B3A7A] transition text-md">Safety</a>
+                <a href="contact.html" class="hover:text-[#5B3A7A] transition text-md">Contact</a>
+                <a href="weather.html" class="hover:text-[#5B3A7A] transition text-md">Weather</a>
+                <a id="locationNavLink" href="location.html" class="hover:text-[#5B3A7A] transition text-md">Location</a>
                 <div id="authNavLinks" class="flex gap-3 ml-2"></div>
             </div>
             <button id="mobileMenuBtn" class="md:hidden text-2xl text-gray-700"><i class="fas fa-bars"></i></button>
         </div>
         <div id="mobileMenu" class="fixed inset-0 bg-white z-50 transform translate-x-full transition-transform duration-300 md:hidden">
             <div class="flex justify-end p-6"><button id="closeMenuBtn" class="text-2xl"><i class="fas fa-times"></i></button></div>
-            <div class="flex flex-col items-center gap-7 text-xl font-medium pt-10">
+            <div class="flex flex-col items-center gap-6 text-xl font-medium pt-10">
                 <a href="index.html">Home</a>
                 <a href="index.html#how-it-works">How it works</a>
                 <a href="index.html#safety">Safety</a>
@@ -80,7 +88,7 @@
         <section class="gradient-bg text-white py-20">
             <div class="max-w-4xl mx-auto text-center px-6">
                 <i class="fas fa-car-side text-5xl mb-4"></i>
-                <h1 class="text-4xl md:text-5xl font-bold mb-4">Drive with SheDrives</h1>
+                <h1 class="text-4xl md:text-5xl font-bold mb-4">Drive with FemGO</h1>
                 <p class="text-xl text-purple-100">Join a community of empowered women drivers. Flexible hours, great earnings, and a supportive network.</p>
             </div>
         </section>
@@ -156,6 +164,32 @@
                             <div><label class="block font-medium mb-1">Vehicle Year *</label><select id="vehicleYear" class="form-select w-full border border-gray-200 rounded-xl px-4 py-3"><option value="">Select Year</option><option>2024</option><option>2023</option><option>2022</option><option>2021</option><option>2020</option><option>2019</option><option>2018</option><option>2017</option><option>2016</option><option>2015</option><option>2014</option><option>2013</option><option>2012</option><option>2011</option><option>2010</option></select><span class="error-text hidden" id="vehicleYearError">Please select vehicle year.</span></div>
                         </div>
                     </div>
+
+                    <!-- Document Upload Section (NEW) -->
+                    <div>
+                        <h3 class="text-xl font-semibold mb-4 pb-2 border-b border-gray-200"><i class="fas fa-camera text-[#6A4E8F] mr-2"></i> Document Upload</h3>
+                        <div class="grid md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block font-medium mb-1">CNIC Front Image *</label>
+                                <input type="file" id="cnicFront" accept="image/jpeg,image/png,image/jpg" class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm">
+                                <div class="file-name" id="cnicFrontName"></div>
+                                <span class="error-text hidden" id="cnicFrontError">Please upload CNIC front image.</span>
+                            </div>
+                            <div>
+                                <label class="block font-medium mb-1">CNIC Back Image *</label>
+                                <input type="file" id="cnicBack" accept="image/jpeg,image/png,image/jpg" class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm">
+                                <div class="file-name" id="cnicBackName"></div>
+                                <span class="error-text hidden" id="cnicBackError">Please upload CNIC back image.</span>
+                            </div>
+                            <div>
+                                <label class="block font-medium mb-1">Passport Size Photo *</label>
+                                <input type="file" id="passportPhoto" accept="image/jpeg,image/png,image/jpg" class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm">
+                                <div class="file-name" id="passportPhotoName"></div>
+                                <span class="error-text hidden" id="passportPhotoError">Please upload passport size photo.</span>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Declaration -->
                     <div>
                         <h3 class="text-xl font-semibold mb-4 pb-2 border-b border-gray-200"><i class="fas fa-gavel text-[#6A4E8F] mr-2"></i> Declaration</h3>
@@ -176,8 +210,13 @@
     </main>
 
     <footer class="bg-gray-900 text-gray-300 py-12 mt-12">
-        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-8">...</div>
-        <div class="text-center text-xs text-gray-500 mt-8">© 2025 SheDrives — Empowering women drivers worldwide.</div>
+        <div class="max-w-7xl mx-auto px-6 md:px-12 grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div><div class="flex items-center gap-2"><div class="w-8 h-8 rounded-full bg-white/20 flex justify-center items-center"><i class="fas fa-venus text-white"></i></div><span class="font-bold text-xl text-white">FemGO</span></div><p class="text-sm mt-3">Safe rides, women drivers.</p></div>
+            <div><h4 class="font-semibold text-white">Company</h4><ul class="mt-3 space-y-2 text-sm"><li>About us</li><li>Safety center</li></ul></div>
+            <div><h4 class="font-semibold text-white">Support</h4><ul class="mt-3 space-y-2 text-sm"><li>Help center</li><li>Contact support</li></ul></div>
+            <div><h4 class="font-semibold text-white">Legal</h4><ul class="mt-3 space-y-2 text-sm"><li>Privacy policy</li></ul></div>
+        </div>
+        <div class="text-center text-xs text-gray-500 mt-8">© 2025 FemGO — Empowering women drivers worldwide.</div>
     </footer>
 
     <script src="auth.js"></script>
@@ -191,12 +230,22 @@
             closeBtn.onclick = () => mobileMenu.classList.add('translate-x-full');
         }
 
-        // Check if user is logged in
+        // Helper to convert file to base64
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+            });
+        }
+
+        // Check login status & file inputs
         const loggedUser = localStorage.getItem('loggedInUser');
         const warningDiv = document.getElementById('loginWarning');
         const submitBtn = document.getElementById('submitBtn');
 
-        // Function to save all form fields to sessionStorage
+        // Function to save all form fields to sessionStorage (including file names)
         function saveFormDataToSession() {
             const formData = {
                 fullName: document.getElementById('fullName').value,
@@ -213,12 +262,16 @@
                 cleanRecord: document.getElementById('cleanRecord').checked,
                 licenseValid: document.getElementById('licenseValid').checked,
                 vehicleCondition: document.getElementById('vehicleCondition').checked,
-                termsAgree: document.getElementById('termsAgree').checked
+                termsAgree: document.getElementById('termsAgree').checked,
+                // We don't save actual files in session storage, just flags that they were selected
+                cnicFrontName: document.getElementById('cnicFront').files.length ? document.getElementById('cnicFront').files[0].name : '',
+                cnicBackName: document.getElementById('cnicBack').files.length ? document.getElementById('cnicBack').files[0].name : '',
+                passportPhotoName: document.getElementById('passportPhoto').files.length ? document.getElementById('passportPhoto').files[0].name : ''
             };
             sessionStorage.setItem('pendingDriverApp', JSON.stringify(formData));
         }
 
-        // Function to restore form data from sessionStorage
+        // Function to restore form data from sessionStorage (text fields only)
         function restoreFormDataFromSession() {
             const saved = sessionStorage.getItem('pendingDriverApp');
             if (saved) {
@@ -238,28 +291,26 @@
                 document.getElementById('licenseValid').checked = data.licenseValid || false;
                 document.getElementById('vehicleCondition').checked = data.vehicleCondition || false;
                 document.getElementById('termsAgree').checked = data.termsAgree || false;
-                // Clear session storage after restore
+                // Show filenames if they existed (for user reference)
+                if (data.cnicFrontName) document.getElementById('cnicFrontName').innerText = data.cnicFrontName;
+                if (data.cnicBackName) document.getElementById('cnicBackName').innerText = data.cnicBackName;
+                if (data.passportPhotoName) document.getElementById('passportPhotoName').innerText = data.passportPhotoName;
                 sessionStorage.removeItem('pendingDriverApp');
             }
         }
 
         if (!loggedUser) {
-            // Not logged in: show warning, disable submit button, but allow typing
             warningDiv.style.display = 'block';
             submitBtn.disabled = true;
             submitBtn.classList.add('btn-submit-disabled');
             submitBtn.classList.remove('btn-submit-enabled');
-            
-            // When user clicks on Login or Signup links inside warning, save current form data first
             const loginLinks = document.querySelectorAll('#loginWarning a');
             loginLinks.forEach(link => {
                 link.addEventListener('click', (e) => {
                     saveFormDataToSession();
-                    // Allow navigation (no preventDefault)
                 });
             });
         } else {
-            // Logged in: hide warning, enable submit button, restore any pending data
             warningDiv.style.display = 'none';
             submitBtn.disabled = false;
             submitBtn.classList.add('btn-submit-enabled');
@@ -267,7 +318,7 @@
             restoreFormDataFromSession();
         }
 
-        // ========== FORM VALIDATION (only runs if logged in, but we still attach listeners anyway) ==========
+        // Real-time validations (same as before)
         const nameRegex = /^[A-Za-zÀ-ÿ]{2,}(?: [A-Za-zÀ-ÿ]+)+$/;
         const emailRegex = /^[^\s@]+@([^\s@.,]+\.)+[^\s@.,]{2,}$/;
         const phoneRegex = /^(\+92|0)[3-9]\d{9}$/;
@@ -313,7 +364,39 @@
             return allChecked;
         }
 
-        // Attach real-time validation regardless of login (it just shows/hides errors)
+        // File validation
+        function validateFile(fileInput, errorId) {
+            const files = fileInput.files;
+            const isValid = files && files.length > 0;
+            const errSpan = document.getElementById(errorId);
+            if (!isValid) {
+                fileInput.classList.add('error-border');
+                errSpan.classList.remove('hidden');
+            } else {
+                fileInput.classList.remove('error-border');
+                errSpan.classList.add('hidden');
+            }
+            return isValid;
+        }
+
+        // Display file names when selected
+        document.getElementById('cnicFront').addEventListener('change', function(e) {
+            const nameSpan = document.getElementById('cnicFrontName');
+            if (this.files.length) nameSpan.innerText = this.files[0].name;
+            else nameSpan.innerText = '';
+        });
+        document.getElementById('cnicBack').addEventListener('change', function(e) {
+            const nameSpan = document.getElementById('cnicBackName');
+            if (this.files.length) nameSpan.innerText = this.files[0].name;
+            else nameSpan.innerText = '';
+        });
+        document.getElementById('passportPhoto').addEventListener('change', function(e) {
+            const nameSpan = document.getElementById('passportPhotoName');
+            if (this.files.length) nameSpan.innerText = this.files[0].name;
+            else nameSpan.innerText = '';
+        });
+
+        // Attach real-time validation listeners
         document.getElementById('fullName').addEventListener('input', () => validateField(document.getElementById('fullName'), nameRegex, 'fullNameError'));
         document.getElementById('cnic').addEventListener('input', () => validateField(document.getElementById('cnic'), cnicRegex, 'cnicError'));
         document.getElementById('email').addEventListener('input', () => validateField(document.getElementById('email'), emailRegex, 'emailError'));
@@ -326,20 +409,19 @@
         document.getElementById('experience').addEventListener('change', () => validateSelect('experience', 'experienceError'));
         document.getElementById('vehicleYear').addEventListener('change', () => validateSelect('vehicleYear', 'vehicleYearError'));
 
-        // Submit only if logged in
         const form = document.getElementById('driverApplicationForm');
         const msgDiv = document.getElementById('formMessage');
 
-        form.addEventListener('submit', (e) => {
+        // SUBMIT HANDLER (with file uploads as base64)
+        form.addEventListener('submit', async (e) => {
             e.preventDefault();
             if (!loggedUser) {
-                // Should never happen because button is disabled, but just in case:
                 saveFormDataToSession();
                 window.location.href = 'login.html?return=drive.html';
                 return;
             }
 
-            // Validate all fields
+            // Validate all fields including files
             const isName = validateField(document.getElementById('fullName'), nameRegex, 'fullNameError');
             const isCnic = validateField(document.getElementById('cnic'), cnicRegex, 'cnicError');
             const isEmail = validateField(document.getElementById('email'), emailRegex, 'emailError');
@@ -352,41 +434,60 @@
             const isExperience = validateSelect('experience', 'experienceError');
             const isYear = validateSelect('vehicleYear', 'vehicleYearError');
             const isCheckboxes = validateCheckboxes();
+            const isCnicFrontValid = validateFile(document.getElementById('cnicFront'), 'cnicFrontError');
+            const isCnicBackValid = validateFile(document.getElementById('cnicBack'), 'cnicBackError');
+            const isPassportValid = validateFile(document.getElementById('passportPhoto'), 'passportPhotoError');
 
-            if (isName && isCnic && isEmail && isPhone && isAddress && isLicense && isVehicleModel && isVehicleReg && isVehicleColor && isExperience && isYear && isCheckboxes) {
-                // Save to localStorage
-                let applications = JSON.parse(localStorage.getItem('sheDrivesDriverApps') || '[]');
-                applications.push({
-                    fullName: document.getElementById('fullName').value.trim(),
-                    cnic: document.getElementById('cnic').value.trim(),
-                    email: document.getElementById('email').value.trim(),
-                    phone: document.getElementById('phone').value.trim(),
-                    address: document.getElementById('address').value.trim(),
-                    licenseNumber: document.getElementById('licenseNumber').value.trim(),
-                    experience: document.getElementById('experience').value,
-                    vehicleModel: document.getElementById('vehicleModel').value.trim(),
-                    vehicleReg: document.getElementById('vehicleReg').value.trim(),
-                    vehicleColor: document.getElementById('vehicleColor').value.trim(),
-                    vehicleYear: document.getElementById('vehicleYear').value,
-                    cleanRecord: document.getElementById('cleanRecord').checked,
-                    licenseValid: document.getElementById('licenseValid').checked,
-                    vehicleCondition: document.getElementById('vehicleCondition').checked,
-                    termsAgree: document.getElementById('termsAgree').checked,
-                    submittedAt: new Date().toISOString(),
-                    status: 'pending'
-                });
-                localStorage.setItem('sheDrivesDriverApps', JSON.stringify(applications));
-                form.reset();
-                // Success message
-                msgDiv.classList.remove('hidden');
-                msgDiv.innerHTML = '<div class="bg-green-100 text-green-700 p-4 rounded-xl"><i class="fas fa-check-circle mr-2"></i> Application submitted successfully! We will contact you as soon as possible.</div>';
-                setTimeout(() => { msgDiv.classList.add('hidden'); msgDiv.innerHTML = ''; }, 8000);
+            if (isName && isCnic && isEmail && isPhone && isAddress && isLicense && isVehicleModel && isVehicleReg && isVehicleColor && isExperience && isYear && isCheckboxes && isCnicFrontValid && isCnicBackValid && isPassportValid) {
+                // Convert files to base64
+                const cnicFrontFile = document.getElementById('cnicFront').files[0];
+                const cnicBackFile = document.getElementById('cnicBack').files[0];
+                const passportFile = document.getElementById('passportPhoto').files[0];
+
+                try {
+                    const cnicFrontBase64 = await fileToBase64(cnicFrontFile);
+                    const cnicBackBase64 = await fileToBase64(cnicBackFile);
+                    const passportBase64 = await fileToBase64(passportFile);
+
+                    let applications = JSON.parse(localStorage.getItem('femgoDriverApps') || '[]');
+                    applications.push({
+                        fullName: document.getElementById('fullName').value.trim(),
+                        cnic: document.getElementById('cnic').value.trim(),
+                        email: document.getElementById('email').value.trim(),
+                        phone: document.getElementById('phone').value.trim(),
+                        address: document.getElementById('address').value.trim(),
+                        licenseNumber: document.getElementById('licenseNumber').value.trim(),
+                        experience: document.getElementById('experience').value,
+                        vehicleModel: document.getElementById('vehicleModel').value.trim(),
+                        vehicleReg: document.getElementById('vehicleReg').value.trim(),
+                        vehicleColor: document.getElementById('vehicleColor').value.trim(),
+                        vehicleYear: document.getElementById('vehicleYear').value,
+                        cleanRecord: document.getElementById('cleanRecord').checked,
+                        licenseValid: document.getElementById('licenseValid').checked,
+                        vehicleCondition: document.getElementById('vehicleCondition').checked,
+                        termsAgree: document.getElementById('termsAgree').checked,
+                        cnicFront: cnicFrontBase64,
+                        cnicBack: cnicBackBase64,
+                        passportPhoto: passportBase64,
+                        submittedAt: new Date().toISOString(),
+                        status: 'pending'
+                    });
+                    localStorage.setItem('femgoDriverApps', JSON.stringify(applications));
+                    form.reset();
+                    document.querySelectorAll('.error-border').forEach(el => el.classList.remove('error-border'));
+                    document.querySelectorAll('.error-text').forEach(el => el.classList.add('hidden'));
+                    msgDiv.classList.remove('hidden');
+                    msgDiv.innerHTML = '<div class="bg-green-100 text-green-700 p-4 rounded-xl"><i class="fas fa-check-circle mr-2"></i> Application submitted successfully! We will contact you as soon as possible.</div>';
+                    setTimeout(() => { msgDiv.classList.add('hidden'); msgDiv.innerHTML = ''; }, 8000);
+                } catch (err) {
+                    alert("Error reading files. Please try again.");
+                }
             } else {
                 const firstErr = document.querySelector('.error-border');
                 if (firstErr) firstErr.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 const tempMsg = document.createElement('div');
                 tempMsg.className = 'fixed top-24 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-6 py-3 rounded-xl shadow-lg z-50 text-sm';
-                tempMsg.innerText = 'Please fix all errors before submitting.';
+                tempMsg.innerText = 'Please fix all errors and upload all required images.';
                 document.body.appendChild(tempMsg);
                 setTimeout(() => tempMsg.remove(), 3000);
             }
