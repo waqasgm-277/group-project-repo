@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>SheDrives · Safe Rides by Women, for Women</title>
+    <title>FemGO · Safe Rides by Women, for Women</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -16,55 +16,116 @@
             height: 48px;
             animation: spin 1s linear infinite;
         }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        .animate-pulse {
-            animation: pulse 1.5s infinite;
-        }
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 0.8; }
-            70% { transform: scale(1.05); opacity: 1; }
-            100% { transform: scale(1); opacity: 0.8; }
-        }
-        .gradient-bg {
-            background: linear-gradient(135deg, #6A4E8F 0%, #A280C9 100%);
-        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .animate-pulse { animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); opacity: 0.8; } 70% { transform: scale(1.05); opacity: 1; } 100% { transform: scale(1); opacity: 0.8; } }
+        .gradient-bg { background: linear-gradient(135deg, #6A4E8F 0%, #A280C9 100%); }
         .vehicle-card {
-            transition: all 0.2s ease;
+            transition: all 0.3s cubic-bezier(0.2, 0, 0, 1);
+            cursor: pointer;
+            border-radius: 1.5rem;
+            background: white;
+            box-shadow: 0 8px 20px -6px rgba(0,0,0,0.05);
+            border: 1px solid rgba(106,78,143,0.1);
         }
         .vehicle-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 25px -12px rgba(0,0,0,0.1);
+            transform: translateY(-8px);
+            box-shadow: 0 25px 35px -12px rgba(106,78,143,0.25);
+            border-color: rgba(106,78,143,0.3);
+        }
+        .vehicle-image {
+            transition: transform 0.5s ease;
+        }
+        .vehicle-card:hover .vehicle-image {
+            transform: scale(1.05);
+        }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .animate-slide-in { animation: slideIn 0.3s ease; }
+
+        /* Login Modal */
+        .login-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            backdrop-filter: blur(4px);
+        }
+        .login-modal-content {
+            background: white;
+            border-radius: 1.5rem;
+            max-width: 400px;
+            width: 90%;
+            padding: 2rem;
+            text-align: center;
+            animation: fadeInScale 0.2s ease;
+        }
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .logo-img {
+            max-height: 90px;
+            width: auto;
+        }
+
+        /* Enhanced CTA Section */
+        .cta-glow {
+            position: relative;
+            overflow: hidden;
+        }
+        .cta-glow::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 70%);
+            animation: rotateGlow 20s linear infinite;
+            pointer-events: none;
+        }
+        @keyframes rotateGlow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .cta-button {
+            transition: all 0.2s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -5px rgba(0,0,0,0.2);
         }
     </style>
 </head>
 <body class="antialiased">
 
-    <!-- ================= NAVIGATION ================= -->
-    <nav class="w-full py-5 px-6 md:px-12 lg:px-24 bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
-        <div class="max-w-7xl mx-auto flex justify-between items-center flex-wrap gap-4">
-            <div class="flex items-center gap-2">
-                <div class="w-9 h-9 rounded-full gradient-bg flex items-center justify-center shadow-md">
-                    <i class="fas fa-venus text-white text-sm"></i>
-                </div>
-                <span class="font-bold text-2xl tracking-tight bg-gradient-to-r from-[#2A1E3D] to-[#6A4E8F] bg-clip-text text-transparent">SheDrives</span>
+    <!-- ================= NAVIGATION (LOGO ONLY) ================= -->
+    <nav class="w-full py-3 px-6 md:px-12 lg:px-24 bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center">
+                <img src="/logo.png" alt="FemGO Logo" class="logo-img">
             </div>
             <div class="hidden md:flex items-center gap-6 font-medium text-gray-700">
-                <a href="index.html" class="hover:text-[#6A4E8F] transition">Home</a>
-                <a href="index.html#how-it-works" class="hover:text-[#6A4E8F] transition">How it works</a>
-                <a href="index.html#safety" class="hover:text-[#6A4E8F] transition">Safety</a>
-                <a href="contact.html" class="hover:text-[#6A4E8F] transition">Contact</a>
-                <a href="weather.html" class="hover:text-[#6A4E8F] transition">Weather</a>
-                <a href="location.html" class="hover:text-[#6A4E8F] transition">Location</a>
+                <a href="index.html" class="hover:text-[#6A4E8F] transition text-md">Home</a>
+                <a href="index.html#how-it-works" class="hover:text-[#6A4E8F] transition text-md">How it works</a>
+                <a href="index.html#safety" class="hover:text-[#6A4E8F] transition text-md">Safety</a>
+                <a href="contact.html" class="hover:text-[#6A4E8F] transition text-md">Contact</a>
+                <a href="weather.html" class="hover:text-[#6A4E8F] transition text-md">Weather</a>
+                <a href="location.html" class="hover:text-[#6A4E8F] transition text-md">Location</a>
                 <div id="authNavLinks" class="flex gap-3 ml-2"></div>
             </div>
             <button id="mobileMenuBtn" class="md:hidden text-2xl text-gray-700"><i class="fas fa-bars"></i></button>
         </div>
         <div id="mobileMenu" class="fixed inset-0 bg-white z-50 transform translate-x-full transition-transform duration-300 md:hidden">
             <div class="flex justify-end p-6"><button id="closeMenuBtn" class="text-2xl"><i class="fas fa-times"></i></button></div>
-            <div class="flex flex-col items-center gap-7 text-xl font-medium pt-10">
+            <div class="flex flex-col items-center gap-6 text-xl font-medium pt-10">
                 <a href="index.html">Home</a>
                 <a href="index.html#how-it-works">How it works</a>
                 <a href="index.html#safety">Safety</a>
@@ -83,31 +144,21 @@
                 <div>
                     <span class="inline-block px-4 py-1.5 rounded-full bg-[#F0E9F6] text-[#6A4E8F] text-sm font-semibold tracking-wide mb-6"><i class="fas fa-shield-alt mr-2"></i> Women-driven · women-first</span>
                     <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight tracking-tight text-gray-900">Ride with <span class="bg-gradient-to-r from-[#6A4E8F] to-[#A280C9] bg-clip-text text-transparent">confidence</span>, driven by women</h1>
-                    <p class="text-gray-500 text-lg mt-6 leading-relaxed">SheDrives connects women passengers with verified female drivers. Safe, comfortable, and empowering — because every journey should feel secure.</p>
+                    <p class="text-gray-500 text-lg mt-6 leading-relaxed">FemGO connects women passengers with verified female drivers. Safe, comfortable, and empowering — because every journey should feel secure.</p>
                     <div class="flex flex-wrap gap-4 mt-8">
                         <button onclick="window.open('https://www.apple.com/app-store/', '_blank')" class="px-8 py-3.5 rounded-xl gradient-bg text-white font-bold btn-primary flex items-center gap-2"><i class="fab fa-apple text-xl"></i> App Store</button>
                         <button onclick="window.open('https://play.google.com/store/games?hl=en', '_blank')" class="px-8 py-3.5 rounded-xl bg-gray-900 text-white font-bold shadow-md hover:bg-gray-800 transition flex items-center gap-2"><i class="fab fa-google-play text-xl"></i> Google Play</button>
                     </div>
                     <div class="flex items-center gap-4 mt-8 text-sm text-gray-500">
-                        <div class="flex -space-x-2">
-                            <div class="w-8 h-8 rounded-full bg-gray-200 border-2 border-white flex items-center justify-center text-xs font-bold text-gray-700">👩</div>
-                            <div class="w-8 h-8 rounded-full bg-gray-200 border-2 border-white flex items-center justify-center text-xs font-bold text-gray-700">👩</div>
-                            <div class="w-8 h-8 rounded-full bg-gray-200 border-2 border-white flex items-center justify-center text-xs font-bold text-gray-700">👩</div>
-                            <div class="w-8 h-8 rounded-full bg-[#6A4E8F]/20 border-2 border-white flex items-center justify-center text-xs font-bold text-[#6A4E8F]">+5k</div>
-                        </div>
+                        <div class="flex -space-x-2"><div class="w-8 h-8 rounded-full bg-gray-200 border-2 border-white flex items-center justify-center text-xs font-bold text-gray-700">👩</div><div class="w-8 h-8 rounded-full bg-gray-200 border-2 border-white flex items-center justify-center text-xs font-bold text-gray-700">👩</div><div class="w-8 h-8 rounded-full bg-gray-200 border-2 border-white flex items-center justify-center text-xs font-bold text-gray-700">👩</div><div class="w-8 h-8 rounded-full bg-[#6A4E8F]/20 border-2 border-white flex items-center justify-center text-xs font-bold text-[#6A4E8F]">+5k</div></div>
                         <span><span class="font-bold text-gray-800">5,000+</span> women drivers & growing</span>
                     </div>
                 </div>
                 <div class="relative flex justify-center">
                     <div class="hero-mockup p-6 rounded-3xl shadow-2xl bg-white/90 w-full max-w-lg">
                         <img src="/hjk.jfif" alt="App mockup" class="rounded-2xl w-full shadow-md">
-                        <div class="absolute -bottom-4 -left-4 bg-white rounded-xl p-3 shadow-lg flex items-center gap-2">
-                            <i class="fas fa-check-circle text-[#6A4E8F] text-xl"></i>
-                            <span class="text-sm font-semibold">100% female drivers</span>
-                        </div>
-                        <div class="absolute -top-3 -right-3 bg-white rounded-full p-3 shadow-lg">
-                            <i class="fas fa-shield-heart text-[#6A4E8F] text-xl"></i>
-                        </div>
+                        <div class="absolute -bottom-4 -left-4 bg-white rounded-xl p-3 shadow-lg flex items-center gap-2"><i class="fas fa-check-circle text-[#6A4E8F] text-xl"></i><span class="text-sm font-semibold">100% female drivers</span></div>
+                        <div class="absolute -top-3 -right-3 bg-white rounded-full p-3 shadow-lg"><i class="fas fa-shield-heart text-[#6A4E8F] text-xl"></i></div>
                     </div>
                 </div>
             </div>
@@ -118,25 +169,13 @@
             <div class="max-w-7xl mx-auto px-6 md:px-12">
                 <div class="text-center max-w-2xl mx-auto">
                     <span class="text-[#6A4E8F] font-semibold text-sm uppercase tracking-wider">Simple & seamless</span>
-                    <h2 class="text-3xl md:text-4xl font-bold mt-2 text-gray-900">How SheDrives works</h2>
+                    <h2 class="text-3xl md:text-4xl font-bold mt-2 text-gray-900">How FemGO works</h2>
                     <p class="text-gray-500 mt-4">From booking to arrival — every step built for safety and simplicity.</p>
                 </div>
                 <div class="grid md:grid-cols-3 gap-8 mt-16">
-                    <div class="text-center p-6 card-default">
-                        <div class="w-16 h-16 mx-auto step-number rounded-full flex items-center justify-center text-white text-2xl font-bold shadow-md" style="background:linear-gradient(135deg,#6A4E8F,#A280C9)">1</div>
-                        <h3 class="text-xl font-bold mt-5">Request a ride</h3>
-                        <p class="text-gray-500 mt-2">Enter pickup & destination. Only female drivers will be matched with you.</p>
-                    </div>
-                    <div class="text-center p-6 card-default">
-                        <div class="w-16 h-16 mx-auto step-number rounded-full flex items-center justify-center text-white text-2xl font-bold shadow-md" style="background:linear-gradient(135deg,#6A4E8F,#A280C9)">2</div>
-                        <h3 class="text-xl font-bold mt-5">Verified driver arrives</h3>
-                        <p class="text-gray-500 mt-2">See driver details, real-time location, and share trip with emergency contacts.</p>
-                    </div>
-                    <div class="text-center p-6 card-default">
-                        <div class="w-16 h-16 mx-auto step-number rounded-full flex items-center justify-center text-white text-2xl font-bold shadow-md" style="background:linear-gradient(135deg,#6A4E8F,#A280C9)">3</div>
-                        <h3 class="text-xl font-bold mt-5">Safe, comfortable travel</h3>
-                        <p class="text-gray-500 mt-2">Enjoy a peaceful ride with trusted female drivers. Cashless & secure payment.</p>
-                    </div>
+                    <div class="text-center p-6 card-default"><div class="w-16 h-16 mx-auto rounded-full bg-gradient-to-br from-[#6A4E8F] to-[#A280C9] flex items-center justify-center text-white text-2xl font-bold shadow-md">1</div><h3 class="text-xl font-bold mt-5">Request a ride</h3><p class="text-gray-500 mt-2">Enter pickup & destination. Only female drivers will be matched with you.</p></div>
+                    <div class="text-center p-6 card-default"><div class="w-16 h-16 mx-auto rounded-full bg-gradient-to-br from-[#6A4E8F] to-[#A280C9] flex items-center justify-center text-white text-2xl font-bold shadow-md">2</div><h3 class="text-xl font-bold mt-5">Verified driver arrives</h3><p class="text-gray-500 mt-2">See driver details, real-time location, and share trip with emergency contacts.</p></div>
+                    <div class="text-center p-6 card-default"><div class="w-16 h-16 mx-auto rounded-full bg-gradient-to-br from-[#6A4E8F] to-[#A280C9] flex items-center justify-center text-white text-2xl font-bold shadow-md">3</div><h3 class="text-xl font-bold mt-5">Safe, comfortable travel</h3><p class="text-gray-500 mt-2">Enjoy a peaceful ride with trusted female drivers. Cashless & secure payment.</p></div>
                 </div>
             </div>
         </section>
@@ -145,33 +184,19 @@
         <section id="safety" class="py-20 bg-gradient-to-br from-[#F9F5FF] to-white">
             <div class="max-w-7xl mx-auto px-6 md:px-12">
                 <div class="grid lg:grid-cols-2 gap-12 items-center">
-                    <div>
-                        <span class="text-[#6A4E8F] font-semibold text-sm uppercase tracking-wide"><i class="fas fa-lock mr-1"></i> Our promise</span>
-                        <h2 class="text-3xl md:text-4xl font-bold mt-2 text-gray-900">Safety isn't a feature — it's our foundation</h2>
-                        <p class="text-gray-500 mt-4 leading-relaxed">From advanced identity checks to in-app emergency tools, we’ve built a multi-layered safety ecosystem designed specifically for women’s security and peace of mind.</p>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
-                            <div class="flex items-start gap-3"><i class="fas fa-user-check text-[#6A4E8F] text-xl mt-0.5"></i><div><h4 class="font-bold">Strict verification</h4><p class="text-sm text-gray-500">All drivers are female & background-checked.</p></div></div>
-                            <div class="flex items-start gap-3"><i class="fas fa-share-alt text-[#6A4E8F] text-xl mt-0.5"></i><div><h4 class="font-bold">Live trip sharing</h4><p class="text-sm text-gray-500">Share location with up to 5 trusted contacts.</p></div></div>
-                            <div class="flex items-start gap-3"><i class="fas fa-sos text-[#6A4E8F] text-xl mt-0.5"></i><div><h4 class="font-bold">SOS emergency button</h4><p class="text-sm text-gray-500">Immediate alert with real-time location.</p></div></div>
-                            <div class="flex items-start gap-3"><i class="fas fa-headset text-[#6A4E8F] text-xl mt-0.5"></i><div><h4 class="font-bold">24/7 women support team</h4><p class="text-sm text-gray-500">Trained response for any situation.</p></div></div>
-                        </div>
-                    </div>
+                    <div><span class="text-[#6A4E8F] font-semibold text-sm uppercase tracking-wide"><i class="fas fa-lock mr-1"></i> Our promise</span><h2 class="text-3xl md:text-4xl font-bold mt-2 text-gray-900">Safety isn't a feature — it's our foundation</h2><p class="text-gray-500 mt-4 leading-relaxed">From advanced identity checks to in-app emergency tools, we’ve built a multi-layered safety ecosystem designed specifically for women’s security and peace of mind.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
+                        <div class="flex items-start gap-3"><i class="fas fa-user-check text-[#6A4E8F] text-xl mt-0.5"></i><div><h4 class="font-bold">Strict verification</h4><p class="text-sm text-gray-500">All drivers are female & background-checked.</p></div></div>
+                        <div class="flex items-start gap-3"><i class="fas fa-share-alt text-[#6A4E8F] text-xl mt-0.5"></i><div><h4 class="font-bold">Live trip sharing</h4><p class="text-sm text-gray-500">Share location with up to 5 trusted contacts.</p></div></div>
+                        <div class="flex items-start gap-3"><i class="fas fa-sos text-[#6A4E8F] text-xl mt-0.5"></i><div><h4 class="font-bold">SOS emergency button</h4><p class="text-sm text-gray-500">Immediate alert with real-time location.</p></div></div>
+                        <div class="flex items-start gap-3"><i class="fas fa-headset text-[#6A4E8F] text-xl mt-0.5"></i><div><h4 class="font-bold">24/7 women support team</h4><p class="text-sm text-gray-500">Trained response for any situation.</p></div></div>
+                    </div></div>
                     <div class="relative flex justify-center">
                         <div class="bg-white rounded-3xl shadow-xl p-6 w-full max-w-md">
                             <div class="bg-[#2A1E3D] rounded-2xl p-6 text-white">
-                                <div class="flex justify-between items-center">
-                                    <span class="font-bold text-xl"><i class="fas fa-car-side mr-2"></i> Active ride</span>
-                                    <i class="fas fa-venus-mars text-2xl"></i>
-                                </div>
-                                <div class="mt-4 space-y-2 text-base">
-                                    <div><i class="fas fa-map-marker-alt mr-2 w-5"></i> Pickup: Your current location</div>
-                                    <div><i class="fas fa-flag-checkered mr-2 w-5"></i> Destination: Home / Office</div>
-                                    <div class="pt-2 text-sm opacity-80"><i class="fas fa-user-circle mr-1"></i> Driver: Sara M. ⭐ 4.98 (female-only)</div>
-                                </div>
-                                <div class="mt-6 grid grid-cols-2 gap-3">
-                                    <button id="sosBtnHome" class="bg-red-600 hover:bg-red-700 transition text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2 text-base"><i class="fas fa-exclamation-triangle"></i> SOS Emergency</button>
-                                    <button id="shareRideBtnHome" class="bg-white/20 hover:bg-white/30 transition text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2 text-base"><i class="fab fa-whatsapp"></i> Share ride</button>
-                                </div>
+                                <div class="flex justify-between items-center"><span class="font-bold text-xl"><i class="fas fa-car-side mr-2"></i> Active ride</span><i class="fas fa-venus-mars text-2xl"></i></div>
+                                <div class="mt-4 space-y-2 text-base"><div><i class="fas fa-map-marker-alt mr-2 w-5"></i> Pickup: Your current location</div><div><i class="fas fa-flag-checkered mr-2 w-5"></i> Destination: Home / Office</div><div class="pt-2 text-sm opacity-80"><i class="fas fa-user-circle mr-1"></i> Driver: Sara M. ⭐ 4.98 (female-only)</div></div>
+                                <div class="mt-6 grid grid-cols-2 gap-3"><button id="sosBtnHome" class="bg-red-600 hover:bg-red-700 transition text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2 text-base"><i class="fas fa-exclamation-triangle"></i> SOS Emergency</button><button id="shareRideBtnHome" class="bg-white/20 hover:bg-white/30 transition text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2 text-base"><i class="fab fa-whatsapp"></i> Share ride</button></div>
                                 <p class="text-xs text-white/60 text-center mt-4">📍 Live location will be used for emergency sharing</p>
                             </div>
                         </div>
@@ -180,190 +205,232 @@
             </div>
         </section>
 
-       <!-- ================= VEHICLE SELECTION SECTION (PROFESSIONAL WITH IMAGES + COLOR ACCENTS) ================= -->
-<section id="ride-selection" class="py-20 max-w-7xl mx-auto px-6 md:px-12">
-    <div class="text-center max-w-2xl mx-auto mb-14">
-        <span class="text-[#6A4E8F] font-semibold text-sm uppercase tracking-wider bg-[#F0E9F6] px-4 py-1.5 rounded-full inline-block">Choose your ride</span>
-        <h2 class="text-3xl md:text-4xl font-bold mt-4 text-gray-900">Pick the perfect vehicle for your journey</h2>
-        <p class="text-gray-500 mt-3">All rides are driven by verified female drivers. Select a category and proceed to book.</p>
-    </div>
-    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
-        <!-- Local Car -->
-        <div class="vehicle-card group bg-white rounded-2xl overflow-hidden cursor-pointer shadow-md hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-t-4 border-t-[#6A4E8F]" data-vehicle="local">
-            <div class="relative h-48 overflow-hidden bg-gray-100">
-                <img src="/Why Does Most People Buy White Colour Car In Pakistan_.jfif" alt="Suzuki Alto" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                <div class="absolute top-3 right-3 bg-gradient-to-r from-[#6A4E8F] to-[#A280C9] text-white text-xs px-3 py-1 rounded-full shadow-md">Popular</div>
-                <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+        <!-- ================= VEHICLE SELECTION SECTION (ENHANCED CARDS) ================= -->
+        <section id="ride-selection" class="py-20 max-w-7xl mx-auto px-6 md:px-12">
+            <div class="text-center max-w-2xl mx-auto mb-14">
+                <span class="text-[#6A4E8F] font-semibold text-sm uppercase tracking-wider bg-[#F0E9F6] px-4 py-1.5 rounded-full inline-block">Choose your ride</span>
+                <h2 class="text-3xl md:text-4xl font-bold mt-4 text-gray-900">Pick the perfect vehicle for your journey</h2>
+                <p class="text-gray-500 mt-3">All rides are driven by verified female drivers. Select a category and proceed to book.</p>
             </div>
-            <div class="p-5">
-                <div class="flex justify-between items-start mb-2">
-                    <h3 class="text-xl font-bold text-gray-800">Local Car</h3>
-                    <span class="bg-gradient-to-r from-[#6A4E8F] to-[#A280C9] bg-clip-text text-transparent font-bold text-lg">Rs:99</span>
-                </div>
-                <p class="text-sm text-gray-500 mb-2">Suzuki Alto / Similar • Standard</p>
-                <p class="text-gray-600 text-sm mb-4">Budget-friendly, clean, and reliable for daily commutes. Perfect for city rides.</p>
-                <div class="flex justify-between items-center">
-                    <div class="flex items-center gap-3 text-xs text-gray-500">
-                        <span><i class="fas fa-user-friends mr-1"></i> 4 seats</span>
-                        <span><i class="fas fa-suitcase mr-1"></i> 1 bag</span>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Economy Card -->
+                <div class="vehicle-card group" data-vehicle="local">
+                    <div class="relative overflow-hidden rounded-t-1.5rem h-48">
+                        <img src="/Why Does Most People Buy White Colour Car In Pakistan_.jfif" alt="Suzuki Alto" class="vehicle-image w-full h-full object-cover transition-transform duration-500">
+                        <div class="absolute top-3 right-3 bg-gradient-to-r from-[#6A4E8F] to-[#A280C9] text-white text-xs px-3 py-1 rounded-full shadow-md z-10">Popular</div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                     </div>
-                    <span class="text-[#6A4E8F] text-sm font-semibold flex items-center gap-1 group-hover:gap-2 transition-all group-hover:text-[#A280C9]">
-                        Select <i class="fas fa-arrow-right text-xs"></i>
-                    </span>
-                </div>
-            </div>
-        </div>
-        <!-- Premium Car -->
-        <div class="vehicle-card group bg-white rounded-2xl overflow-hidden cursor-pointer shadow-md hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-t-4 border-t-[#6A4E8F]" data-vehicle="premium">
-            <div class="relative h-48 overflow-hidden bg-gray-100">
-                <img src="/El nuevo Toyota Yaris Sedán 2018 llega a México.jfif" alt="Honda City" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                <div class="absolute top-3 right-3 bg-gradient-to-r from-[#6A4E8F] to-[#A280C9] text-white text-xs px-3 py-1 rounded-full shadow-md">Premium</div>
-                <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-            </div>
-            <div class="p-5">
-                <div class="flex justify-between items-start mb-2">
-                    <h3 class="text-xl font-bold text-gray-800">Premium Car</h3>
-                    <span class="bg-gradient-to-r from-[#6A4E8F] to-[#A280C9] bg-clip-text text-transparent font-bold text-lg">Rs:199</span>
-                </div>
-                <p class="text-sm text-gray-500 mb-2">Honda City / Similar • AC + WiFi + Water</p>
-                <p class="text-gray-600 text-sm mb-4">Extra legroom, premium comfort, and in-car amenities. Ideal for business trips.</p>
-                <div class="flex justify-between items-center">
-                    <div class="flex items-center gap-3 text-xs text-gray-500">
-                        <span><i class="fas fa-user-friends mr-1"></i> 4 seats</span>
-                        <span><i class="fas fa-wifi mr-1"></i> WiFi</span>
-                        <span><i class="fas fa-bottle-water mr-1"></i> Water</span>
+                    <div class="p-5">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-xl font-bold text-gray-800">Economy</h3>
+                            <span class="bg-green-100 text-green-700 text-xs font-semibold px-2 py-1 rounded-full">NEW</span>
+                        </div>
+                        <p class="text-sm text-gray-500 mb-2">Suzuki Alto / Similar</p>
+                        <p class="text-gray-600 text-sm mb-4 line-clamp-2">Budget-friendly, clean, reliable for daily commutes. 4 seats • 1 bag</p>
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center gap-3 text-xs text-gray-500">
+                                <span><i class="fas fa-user-friends mr-1"></i> 4 seats</span>
+                                <span><i class="fas fa-suitcase mr-1"></i> 1 bag</span>
+                            </div>
+                            <div class="text-[#6A4E8F] text-sm font-semibold flex items-center gap-1 group-hover:gap-2 transition-all">
+                                Select <i class="fas fa-arrow-right text-xs group-hover:translate-x-1 transition-transform"></i>
+                            </div>
+                        </div>
                     </div>
-                    <span class="text-[#6A4E8F] text-sm font-semibold flex items-center gap-1 group-hover:gap-2 transition-all group-hover:text-[#A280C9]">
-                        Select <i class="fas fa-arrow-right text-xs"></i>
-                    </span>
                 </div>
-            </div>
-        </div>
-        <!-- High Roof -->
-        <div class="vehicle-card group bg-white rounded-2xl overflow-hidden cursor-pointer shadow-md hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-t-4 border-t-[#6A4E8F]" data-vehicle="highroof">
-            <div class="relative h-48 overflow-hidden bg-gray-100">
-                <img src="/Grand Cabin High Roof.jfif" alt="Toyota Innova" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                <div class="absolute top-3 right-3 bg-gradient-to-r from-[#6A4E8F] to-[#A280C9] text-white text-xs px-3 py-1 rounded-full shadow-md">Group</div>
-                <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-            </div>
-            <div class="p-5">
-                <div class="flex justify-between items-start mb-2">
-                    <h3 class="text-xl font-bold text-gray-800">High Roof</h3>
-                    <span class="bg-gradient-to-r from-[#6A4E8F] to-[#A280C9] bg-clip-text text-transparent font-bold text-lg">Rs:349</span>
-                </div>
-                <p class="text-sm text-gray-500 mb-2">Toyota Innova / Similar • Group travel</p>
-                <p class="text-gray-600 text-sm mb-4">Spacious for groups or luggage. Perfect for airport or family trips.</p>
-                <div class="flex justify-between items-center">
-                    <div class="flex items-center gap-3 text-xs text-gray-500">
-                        <span><i class="fas fa-user-friends mr-1"></i> 6-7 seats</span>
-                        <span><i class="fas fa-suitcase mr-1"></i> 3 bags</span>
+                <!-- Comfort Card -->
+                <div class="vehicle-card group" data-vehicle="premium">
+                    <div class="relative overflow-hidden rounded-t-1.5rem h-48">
+                        <img src="/El nuevo Toyota Yaris Sedán 2018 llega a México.jfif" alt="Honda City" class="vehicle-image w-full h-full object-cover transition-transform duration-500">
+                        <div class="absolute top-3 right-3 bg-gradient-to-r from-[#6A4E8F] to-[#A280C9] text-white text-xs px-3 py-1 rounded-full shadow-md z-10">Premium</div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                     </div>
-                    <span class="text-[#6A4E8F] text-sm font-semibold flex items-center gap-1 group-hover:gap-2 transition-all group-hover:text-[#A280C9]">
-                        Select <i class="fas fa-arrow-right text-xs"></i>
-                    </span>
-                </div>
-            </div>
-        </div>
-        <!-- Scooty -->
-        <div class="vehicle-card group bg-white rounded-2xl overflow-hidden cursor-pointer shadow-md hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-t-4 border-t-[#6A4E8F]" data-vehicle="scooty">
-            <div class="relative h-48 overflow-hidden bg-gray-100">
-                <img src="/scooty.jfif" alt="Scooty" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                <div class="absolute top-3 right-3 bg-gradient-to-r from-[#6A4E8F] to-[#A280C9] text-white text-xs px-3 py-1 rounded-full shadow-md">Eco</div>
-                <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-            </div>
-            <div class="p-5">
-                <div class="flex justify-between items-start mb-2">
-                    <h3 class="text-xl font-bold text-gray-800">Scooty</h3>
-                    <span class="bg-gradient-to-r from-[#6A4E8F] to-[#A280C9] bg-clip-text text-transparent font-bold text-lg">Rs:49</span>
-                </div>
-                <p class="text-sm text-gray-500 mb-2">Electric / Petrol • Quick & agile</p>
-                <p class="text-gray-600 text-sm mb-4">Beat traffic, eco-friendly, and perfect for solo short trips.</p>
-                <div class="flex justify-between items-center">
-                    <div class="flex items-center gap-3 text-xs text-gray-500">
-                        <span><i class="fas fa-user-friends mr-1"></i> 1 pillion</span>
-                        <span><i class="fas fa-battery-full mr-1"></i> 80km range</span>
+                    <div class="p-5">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-xl font-bold text-gray-800">Comfort</h3>
+                            <span class="bg-green-100 text-green-700 text-xs font-semibold px-2 py-1 rounded-full">NEW</span>
+                        </div>
+                        <p class="text-sm text-gray-500 mb-2">Honda City / Similar</p>
+                        <p class="text-gray-600 text-sm mb-4">AC, WiFi, water, extra legroom, premium comfort.</p>
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center gap-3 text-xs text-gray-500">
+                                <span><i class="fas fa-user-friends mr-1"></i> 4 seats</span>
+                                <span><i class="fas fa-wifi mr-1"></i> WiFi</span>
+                            </div>
+                            <div class="text-[#6A4E8F] text-sm font-semibold flex items-center gap-1 group-hover:gap-2 transition-all">
+                                Select <i class="fas fa-arrow-right text-xs group-hover:translate-x-1 transition-transform"></i>
+                            </div>
+                        </div>
                     </div>
-                    <span class="text-[#6A4E8F] text-sm font-semibold flex items-center gap-1 group-hover:gap-2 transition-all group-hover:text-[#A280C9]">
-                        Select <i class="fas fa-arrow-right text-xs"></i>
-                    </span>
+                </div>
+                <!-- Van Card -->
+                <div class="vehicle-card group" data-vehicle="highroof">
+                    <div class="relative overflow-hidden rounded-t-1.5rem h-48">
+                        <img src="/Grand Cabin High Roof.jfif" alt="Toyota Innova" class="vehicle-image w-full h-full object-cover transition-transform duration-500">
+                        <div class="absolute top-3 right-3 bg-gradient-to-r from-[#6A4E8F] to-[#A280C9] text-white text-xs px-3 py-1 rounded-full shadow-md z-10">Group</div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    </div>
+                    <div class="p-5">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-xl font-bold text-gray-800">Van</h3>
+                            <span class="bg-green-100 text-green-700 text-xs font-semibold px-2 py-1 rounded-full">NEW</span>
+                        </div>
+                        <p class="text-sm text-gray-500 mb-2">Toyota Innova / Similar</p>
+                        <p class="text-gray-600 text-sm mb-4">Spacious for groups, luggage, airport or family trips. 6-7 seats • 3 bags</p>
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center gap-3 text-xs text-gray-500">
+                                <span><i class="fas fa-user-friends mr-1"></i> 6-7 seats</span>
+                                <span><i class="fas fa-suitcase mr-1"></i> 3 bags</span>
+                            </div>
+                            <div class="text-[#6A4E8F] text-sm font-semibold flex items-center gap-1 group-hover:gap-2 transition-all">
+                                Select <i class="fas fa-arrow-right text-xs group-hover:translate-x-1 transition-transform"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Scooty Card -->
+                <div class="vehicle-card group" data-vehicle="scooty">
+                    <div class="relative overflow-hidden rounded-t-1.5rem h-48">
+                        <img src="/scooty.jfif" alt="Scooty" class="vehicle-image w-full h-full object-cover transition-transform duration-500">
+                        <div class="absolute top-3 right-3 bg-gradient-to-r from-[#6A4E8F] to-[#A280C9] text-white text-xs px-3 py-1 rounded-full shadow-md z-10">Eco</div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    </div>
+                    <div class="p-5">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-xl font-bold text-gray-800">Scooty</h3>
+                            <span class="bg-green-100 text-green-700 text-xs font-semibold px-2 py-1 rounded-full">NEW</span>
+                        </div>
+                        <p class="text-sm text-gray-500 mb-2">Electric / Petrol</p>
+                        <p class="text-gray-600 text-sm mb-4">Beat traffic, eco-friendly, perfect for solo short trips. 1 pillion • 80km range</p>
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center gap-3 text-xs text-gray-500">
+                                <span><i class="fas fa-user-friends mr-1"></i> 1 pillion</span>
+                                <span><i class="fas fa-battery-full mr-1"></i> 80km range</span>
+                            </div>
+                            <div class="text-[#6A4E8F] text-sm font-semibold flex items-center gap-1 group-hover:gap-2 transition-all">
+                                Select <i class="fas fa-arrow-right text-xs group-hover:translate-x-1 transition-transform"></i>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-</section>
+        </section>
+
         <!-- ================= BECOME A DRIVER SECTION ================= -->
         <section id="drive" class="py-20 bg-gray-50">
             <div class="max-w-7xl mx-auto px-6 md:px-12">
                 <div class="grid md:grid-cols-2 gap-12 items-center">
-                    <div class="order-2 md:order-1">
-                        <img src="/learning.jfif" alt="Female driver smiling" class="rounded-2xl shadow-xl object-cover" style="width: 500px;height: 560px;">
-                    </div>
-                    <div class="order-1 md:order-2">
-                        <span class="text-[#6A4E8F] font-semibold tracking-wide"><i class="fas fa-car-side mr-1"></i> Empowerment & earnings</span>
-                        <h2 class="text-3xl md:text-4xl font-bold mt-2 text-gray-900">Drive with SheDrives — flexible, safe, and rewarding</h2>
-                        <p class="text-gray-500 mt-4">Join a supportive network of women drivers. Set your own schedule, earn great income, and be part of the safety movement.</p>
-                        <ul class="mt-6 space-y-3">
-                            <li class="flex items-center gap-3"><i class="fas fa-check-circle text-[#6A4E8F]"></i><span>Flexible hours — drive when you want</span></li>
-                            <li class="flex items-center gap-3"><i class="fas fa-check-circle text-[#6A4E8F]"></i><span>Higher earnings & weekly bonuses</span></li>
-                            <li class="flex items-center gap-3"><i class="fas fa-check-circle text-[#6A4E8F]"></i><span>Free safety training & 24/7 support</span></li>
-                            <li class="flex items-center gap-3"><i class="fas fa-check-circle text-[#6A4E8F]"></i><span>Verified female-only community</span></li>
-                        </ul>
-                        <a href="drive.html" class="mt-8 inline-block px-8 py-3 rounded-xl bg-transparent border-2 border-[#6A4E8F] text-[#6A4E8F] font-bold hover:bg-[#6A4E8F] hover:text-white transition-all duration-200 text-center">Apply to drive →</a>
-                    </div>
+                    <div class="order-2 md:order-1"><img src="/learning.jfif" alt="Female driver smiling" class="rounded-2xl shadow-xl object-cover w-full" style="height: 590px;"></div>
+                    <div class="order-1 md:order-2"><span class="text-[#6A4E8F] font-semibold tracking-wide"><i class="fas fa-car-side mr-1"></i> Empowerment & earnings</span><h2 class="text-3xl md:text-4xl font-bold mt-2 text-gray-900">Drive with FemGO — flexible, safe, and rewarding</h2><p class="text-gray-500 mt-4">Join a supportive network of women drivers. Set your own schedule, earn great income, and be part of the safety movement.</p>
+                    <ul class="mt-6 space-y-3"><li class="flex items-center gap-3"><i class="fas fa-check-circle text-[#6A4E8F]"></i><span>Flexible hours — drive when you want</span></li><li class="flex items-center gap-3"><i class="fas fa-check-circle text-[#6A4E8F]"></i><span>Higher earnings & weekly bonuses</span></li><li class="flex items-center gap-3"><i class="fas fa-check-circle text-[#6A4E8F]"></i><span>Free safety training & 24/7 support</span></li><li class="flex items-center gap-3"><i class="fas fa-check-circle text-[#6A4E8F]"></i><span>Verified female-only community</span></li></ul>
+                    <a href="drive.html" class="mt-8 inline-block px-8 py-3 rounded-xl bg-transparent border-2 border-[#6A4E8F] text-[#6A4E8F] font-bold hover:bg-[#6A4E8F] hover:text-white transition">Apply to drive →</a></div>
                 </div>
             </div>
         </section>
 
-        <!-- ================= TESTIMONIALS & CTA ================= -->
+        <!-- ================= TESTIMONIALS ================= -->
         <section class="py-20 bg-white">
-            <div class="max-w-6xl mx-auto px-6 md:px-12 text-center">
+            <div class="max-w-6xl mx-auto px-6 text-center">
                 <span class="text-[#6A4E8F] text-sm font-semibold uppercase">Trusted by thousands</span>
                 <h2 class="text-3xl font-bold mt-2">What our riders say</h2>
                 <div class="grid md:grid-cols-3 gap-8 mt-12">
-                    <div class="bg-gray-50/80 p-6 rounded-2xl text-left shadow-sm hover:shadow-md transition">
-                        <i class="fas fa-star text-yellow-400 text-sm"></i><i class="fas fa-star text-yellow-400 text-sm"></i><i class="fas fa-star text-yellow-400 text-sm"></i><i class="fas fa-star text-yellow-400 text-sm"></i><i class="fas fa-star text-yellow-400 text-sm"></i>
-                        <p class="text-gray-600 mt-3 italic">“Finally a ride-hailing service where I never feel anxious. Drivers are professional, kind, and always women. Absolute game changer.”</p>
-                        <div class="flex items-center gap-3 mt-5"><div class="w-10 h-10 rounded-full bg-[#6A4E8F]/20 flex items-center justify-center"><i class="fas fa-user-circle text-[#6A4E8F] text-xl"></i></div><div><strong>Nadia K.</strong><p class="text-xs text-gray-400">Verified rider</p></div></div>
-                    </div>
-                    <div class="bg-gray-50/80 p-6 rounded-2xl text-left shadow-sm hover:shadow-md transition">
-                        <i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i>
-                        <p class="text-gray-600 mt-3 italic">“As a woman who works late shifts, SheDrives is my go-to. Real-time tracking and SOS give me total peace of mind.”</p>
-                        <div class="flex items-center gap-3 mt-5"><div class="w-10 h-10 rounded-full bg-[#6A4E8F]/20 flex items-center justify-center"><i class="fas fa-user-circle text-[#6A4E8F] text-xl"></i></div><div><strong>Maria F.</strong><p class="text-xs text-gray-400">Daily commuter</p></div></div>
-                    </div>
-                    <div class="bg-gray-50/80 p-6 rounded-2xl text-left shadow-sm hover:shadow-md transition">
-                        <i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i>
-                        <p class="text-gray-600 mt-3 italic">“Driving with SheDrives changed my life — flexible income and I feel proud to help other women travel safely.”</p>
-                        <div class="flex items-center gap-3 mt-5"><div class="w-10 h-10 rounded-full bg-[#6A4E8F]/20 flex items-center justify-center"><i class="fas fa-user-circle text-[#6A4E8F] text-xl"></i></div><div><strong>Leila H.</strong><p class="text-xs text-gray-400">Driver partner</p></div></div>
-                    </div>
+                    <div class="bg-gray-50/80 p-6 rounded-2xl"><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><p class="text-gray-600 mt-3 italic">“Finally a ride-hailing service where I never feel anxious. Drivers are professional, kind, and always women. Absolute game changer.”</p><div class="flex items-center gap-3 mt-5"><div class="w-10 h-10 rounded-full bg-[#6A4E8F]/20 flex items-center justify-center"><i class="fas fa-user-circle text-[#6A4E8F] text-xl"></i></div><div><strong>Nadia K.</strong><p class="text-xs text-gray-400">Verified rider</p></div></div></div>
+                    <div class="bg-gray-50/80 p-6 rounded-2xl"><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><p class="text-gray-600 mt-3 italic">“As a woman who works late shifts, FemGO is my go-to. Real-time tracking and SOS give me total peace of mind.”</p><div class="flex items-center gap-3 mt-5"><div class="w-10 h-10 rounded-full bg-[#6A4E8F]/20 flex items-center justify-center"><i class="fas fa-user-circle text-[#6A4E8F] text-xl"></i></div><div><strong>Maria F.</strong><p class="text-xs text-gray-400">Daily commuter</p></div></div></div>
+                    <div class="bg-gray-50/80 p-6 rounded-2xl"><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><p class="text-gray-600 mt-3 italic">“Driving with FemGO changed my life — flexible income and I feel proud to help other women travel safely.”</p><div class="flex items-center gap-3 mt-5"><div class="w-10 h-10 rounded-full bg-[#6A4E8F]/20 flex items-center justify-center"><i class="fas fa-user-circle text-[#6A4E8F] text-xl"></i></div><div><strong>Leila H.</strong><p class="text-xs text-gray-400">Driver partner</p></div></div></div>
                 </div>
             </div>
         </section>
 
-        <section class="gradient-bg py-16 mx-6 md:mx-12 rounded-3xl mb-12">
-            <div class="max-w-4xl mx-auto text-center px-4">
-                <h2 class="text-3xl md:text-4xl font-bold text-white">Join the sisterhood of safe rides</h2>
-                <p class="text-purple-100 text-lg mt-3">Download the SheDrives app and experience travel the way it should be.</p>
+        <!-- ================= ENHANCED CTA SECTION (PURPLE WITH GLOW) ================= -->
+        <section class="cta-glow gradient-bg py-16 mx-6 md:mx-12 rounded-3xl mb-12 relative">
+            <div class="relative z-10 text-center text-white px-4">
+                <h2 class="text-3xl md:text-4xl font-bold">Join the sisterhood of safe rides</h2>
+                <p class="text-purple-100 text-lg mt-3 max-w-2xl mx-auto">Be part of a community that prioritizes safety, comfort, and empowerment. Download the app and start your journey today.</p>
                 <div class="flex flex-wrap justify-center gap-4 mt-8">
-                    <button onclick="window.open('https://www.apple.com/app-store/', '_blank')" class="bg-white text-[#6A4E8F] px-6 py-3 rounded-xl font-bold shadow-md hover:shadow-xl transition flex items-center gap-2"><i class="fab fa-apple text-2xl"></i> App Store</button>
-                    <button onclick="window.open('https://play.google.com/store/games?hl=en', '_blank')" class="bg-white/20 backdrop-blur-sm text-white px-6 py-3 rounded-xl font-bold border border-white/40 flex items-center gap-2 hover:bg-white/30"><i class="fab fa-google-play text-2xl"></i> Google Play</button>
+                    <button onclick="window.open('https://www.apple.com/app-store/', '_blank')" class="cta-button bg-white text-[#6A4E8F] px-6 py-3 rounded-xl font-bold shadow-md hover:shadow-xl transition flex items-center gap-2">
+                        <i class="fab fa-apple text-2xl"></i> App Store
+                    </button>
+                    <button onclick="window.open('https://play.google.com/store/games?hl=en', '_blank')" class="cta-button bg-white/20 backdrop-blur-sm text-white px-6 py-3 rounded-xl font-bold border border-white/40 flex items-center gap-2 hover:bg-white/30 transition">
+                        <i class="fab fa-google-play text-2xl"></i> Google Play
+                    </button>
                 </div>
             </div>
         </section>
     </main>
 
-    <footer class="bg-gray-900 text-gray-300 py-12">
-        <div class="max-w-7xl mx-auto px-6 md:px-12 grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div><div class="flex items-center gap-2"><div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center"><i class="fas fa-venus text-white"></i></div><span class="font-bold text-xl text-white">SheDrives</span></div><p class="text-sm mt-3">Safe rides, women drivers, zero compromise.</p><div class="flex gap-4 mt-5"><i class="fab fa-instagram text-xl hover:text-white cursor-pointer"></i><i class="fab fa-twitter text-xl hover:text-white cursor-pointer"></i><i class="fab fa-linkedin text-xl hover:text-white cursor-pointer"></i></div></div>
-            <div><h4 class="font-semibold text-white">Company</h4><ul class="mt-3 space-y-2 text-sm"><li>About us</li><li>Safety center</li><li>Blog</li><li>Careers</li></ul></div>
-            <div><h4 class="font-semibold text-white">Support</h4><ul class="mt-3 space-y-2 text-sm"><li>Help center</li><li>Community guidelines</li><li>Safety tips</li><li>Contact support</li></ul></div>
-            <div><h4 class="font-semibold text-white">Legal</h4><ul class="mt-3 space-y-2 text-sm"><li>Privacy policy</li><li>Terms of service</li><li>Cookie preferences</li></ul></div>
+    <!-- ================= FOOTER ================= -->
+    <footer class="bg-gray-900 text-gray-300 pt-14 pb-6">
+        <div class="max-w-7xl mx-auto px-6 md:px-12">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+                <div>
+                    <div class="flex items-center gap-2 mb-4">
+                        <img src="logo.png" alt="FemGO Logo" class="h-12 w-auto">
+                        <span class="font-bold text-xl text-white">FemGO</span>
+                    </div>
+                    <p class="text-sm text-gray-400 leading-relaxed mb-4">Safe rides, women drivers, zero compromise. Empowering women to travel with confidence, anytime, anywhere.</p>
+                    <div class="flex gap-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition text-xl"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition text-xl"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition text-xl"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition text-xl"><i class="fab fa-facebook-f"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-white text-lg mb-4">Company</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">About Us</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">How It Works</a></li>
+                        <li><a href="drive.html" class="text-gray-400 hover:text-white transition">Become a Driver</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Safety Center</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Careers</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-white text-lg mb-4">Support</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="contact.html" class="text-gray-400 hover:text-white transition">Contact Us</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Help Center</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Safety Tips</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Community Guidelines</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">FAQs</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-white text-lg mb-4">Stay Updated</h4>
+                    <p class="text-sm text-gray-400 mb-3">Subscribe for exclusive offers & safety tips.</p>
+                    <div class="flex flex-col sm:flex-row gap-2 mb-6">
+                        <input type="email" placeholder="Your email address" class="flex-1 bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#6A4E8F]">
+                        <button class="bg-gradient-to-r from-[#6A4E8F] to-[#A280C9] text-white px-4 py-2 rounded-lg text-sm font-semibold hover:opacity-90 transition">Subscribe</button>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-white text-sm mb-2">Download the App</h4>
+                        <div class="flex gap-3">
+                            <a href="#" class="bg-gray-800 hover:bg-gray-700 rounded-lg px-3 py-2 flex items-center gap-2 transition">
+                                <i class="fab fa-apple text-lg"></i>
+                                <span class="text-xs">App Store</span>
+                            </a>
+                            <a href="#" class="bg-gray-800 hover:bg-gray-700 rounded-lg px-3 py-2 flex items-center gap-2 transition">
+                                <i class="fab fa-google-play text-lg"></i>
+                                <span class="text-xs">Google Play</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-12 pt-6 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-500">
+                <p>© 2025 FemGO — All-female ride hailing. Empowering journeys for women worldwide.</p>
+                <div class="flex gap-6">
+                    <a href="#" class="hover:text-white transition">Privacy Policy</a>
+                    <a href="#" class="hover:text-white transition">Terms of Service</a>
+                    <a href="#" class="hover:text-white transition">Cookie Preferences</a>
+                </div>
+            </div>
         </div>
-        <div class="border-t border-gray-800 mt-10 pt-6 text-center text-xs text-gray-500">© 2025 SheDrives — All-female ride hailing. Empowering journeys for women worldwide.</div>
     </footer>
 
     <script src="auth.js"></script>
     <script>
-        // MOBILE MENU
+        // ================= MOBILE MENU =================
         const menuBtn = document.getElementById('mobileMenuBtn');
         const closeBtn = document.getElementById('closeMenuBtn');
         const mobileMenuDiv = document.getElementById('mobileMenu');
@@ -372,8 +439,8 @@
             closeBtn.onclick = () => mobileMenuDiv.classList.add('translate-x-full');
             document.querySelectorAll('#mobileMenu a').forEach(link => link.addEventListener('click', () => mobileMenuDiv.classList.add('translate-x-full')));
         }
-        
-        // SMOOTH SCROLL
+
+        // ================= SMOOTH SCROLL =================
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function(e) {
                 const targetId = this.getAttribute('href');
@@ -386,86 +453,84 @@
             });
         });
 
-        // SOS and Share functions (unchanged)
+        // ================= POPUP HELPER =================
         function showPopup(message, type = 'error') {
             const popup = document.createElement('div');
-            popup.className = `fixed bottom-5 right-5 bg-white rounded-lg p-4 shadow-xl z-50 border-l-4 ${type === 'success' ? 'border-green-500' : 'border-red-500'}`;
-            popup.style.animation = 'slideIn 0.3s ease';
-            popup.innerHTML = `
-                <div class="flex items-center gap-3">
-                    <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-triangle'} text-${type === 'success' ? 'green' : 'red'}-500 text-xl"></i>
-                    <div>
-                        <p class="font-semibold text-gray-800">${type === 'success' ? 'SOS Alert Sent' : 'SOS Error'}</p>
-                        <p class="text-sm text-gray-600">${message}</p>
-                    </div>
-                </div>
-            `;
+            popup.className = `fixed bottom-5 right-5 bg-white rounded-lg p-4 shadow-xl z-50 border-l-4 ${type === 'success' ? 'border-green-500' : 'border-red-500'} animate-slide-in`;
+            popup.innerHTML = `<div class="flex items-center gap-3"><i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-triangle'} text-${type === 'success' ? 'green' : 'red'}-500 text-xl"></i><div><p class="font-semibold text-gray-800">${type === 'success' ? 'SOS Alert Sent' : 'SOS Error'}</p><p class="text-sm text-gray-600">${message}</p></div></div>`;
             document.body.appendChild(popup);
             setTimeout(() => popup.remove(), 5000);
         }
 
+        // ================= SOS EMERGENCY =================
         function triggerSOS() {
             const statusSpan = document.querySelector('#sosBtnHome + p');
-            if (!navigator.geolocation) {
-                showPopup("Geolocation is not supported by your browser.", "error");
-                return;
-            }
+            if (!navigator.geolocation) { showPopup("Geolocation not supported", "error"); return; }
             if (statusSpan) statusSpan.innerHTML = "📍 Getting your location... <i class='fas fa-spinner fa-spin'></i>";
-            
             navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    const lat = position.coords.latitude;
-                    const lng = position.coords.longitude;
-                    const timestamp = new Date().toISOString();
-                    const googleMapsLink = `https://www.google.com/maps?q=${lat},${lng}`;
-                    const sosAlerts = JSON.parse(localStorage.getItem('sheDrivesSOSAlerts') || '[]');
-                    sosAlerts.push({ id: Date.now(), lat, lng, timestamp, mapsLink: googleMapsLink });
-                    localStorage.setItem('sheDrivesSOSAlerts', JSON.stringify(sosAlerts));
+                (pos) => {
+                    const lat = pos.coords.latitude, lng = pos.coords.longitude;
+                    const sosAlerts = JSON.parse(localStorage.getItem('sosAlerts') || '[]');
+                    sosAlerts.push({ id: Date.now(), lat, lng, timestamp: new Date().toISOString(), mapsLink: `https://www.google.com/maps?q=${lat},${lng}` });
+                    localStorage.setItem('sosAlerts', JSON.stringify(sosAlerts));
                     window.location.href = `tel:112`;
                     if (statusSpan) statusSpan.innerHTML = "✅ Emergency alert sent! Help is on the way.";
-                    showPopup(`Emergency services alerted at ${new Date(timestamp).toLocaleTimeString()}. Your location has been shared.`, "success");
+                    showPopup(`Emergency services alerted. Your location has been shared.`, "success");
                     setTimeout(() => { if (statusSpan) statusSpan.innerHTML = "📍 Live location will be used for emergency"; }, 10000);
                 },
-                (error) => {
-                    let errorMessage = "";
-                    switch(error.code) {
-                        case error.PERMISSION_DENIED: errorMessage = "Location access denied. Please enable location in your browser settings."; break;
-                        case error.POSITION_UNAVAILABLE: errorMessage = "Location unavailable. Check your GPS."; break;
-                        case error.TIMEOUT: errorMessage = "Location request timed out. Try again."; break;
-                        default: errorMessage = "Unknown error.";
-                    }
-                    showPopup(errorMessage, "error");
-                    if (statusSpan) statusSpan.innerHTML = "❌ SOS failed - " + errorMessage.substring(0, 40);
-                    setTimeout(() => { if (statusSpan) statusSpan.innerHTML = "📍 Live location will be used for emergency"; }, 5000);
-                },
+                (err) => { let msg = err.code === 1 ? "Location access denied" : "Location error"; showPopup(msg, "error"); if(statusSpan) statusSpan.innerHTML = "❌ SOS failed"; setTimeout(() => { if(statusSpan) statusSpan.innerHTML = "📍 Live location will be used for emergency"; }, 5000); },
                 { enableHighAccuracy: true, timeout: 10000 }
             );
         }
 
+        // ================= WHATSAPP SHARE =================
         function shareRideOnWhatsApp() {
             if(!navigator.geolocation) { alert("Geolocation not supported"); return; }
             navigator.geolocation.getCurrentPosition((pos) => {
                 const mapsLink = `https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
-                const message = `🚖 SheDrives Safety Share\nMy live location: ${mapsLink}`;
-                window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
+                window.open(`https://wa.me/?text=${encodeURIComponent(`🚖 FemGO Safety Share\nMy live location: ${mapsLink}`)}`, '_blank');
             }, () => alert("Could not get location"));
         }
 
-        const sosBtn = document.getElementById('sosBtnHome');
-        const shareBtn = document.getElementById('shareRideBtnHome');
-        if(sosBtn) sosBtn.addEventListener('click', triggerSOS);
-        if(shareBtn) shareBtn.addEventListener('click', shareRideOnWhatsApp);
+        document.getElementById('sosBtnHome')?.addEventListener('click', triggerSOS);
+        document.getElementById('shareRideBtnHome')?.addEventListener('click', shareRideOnWhatsApp);
 
-        // VEHICLE SELECTION: redirect to book.html with vehicle parameter
+        // ================= LOGIN MODAL AND VEHICLE CLICK =================
+        function showLoginModal(vehicle) {
+            const existing = document.querySelector('.login-modal');
+            if (existing) existing.remove();
+            const modal = document.createElement('div');
+            modal.className = 'login-modal';
+            modal.innerHTML = `
+                <div class="login-modal-content">
+                    <i class="fas fa-lock text-[#6A4E8F] text-5xl mb-4"></i>
+                    <h3 class="text-2xl font-bold text-gray-800">Login Required</h3>
+                    <p class="text-gray-500 mt-2">Please log in or sign up to book a ride.</p>
+                    <div class="flex gap-3 mt-6">
+                        <a href="login.html?return=book.html?vehicle=${vehicle}" class="flex-1 bg-gray-200 text-gray-800 py-2 rounded-xl font-semibold hover:bg-gray-300 transition">Log in</a>
+                        <a href="signup.html?return=book.html?vehicle=${vehicle}" class="flex-1 gradient-bg text-white py-2 rounded-xl font-semibold hover:opacity-90 transition">Sign up</a>
+                    </div>
+                    <button id="closeModalBtn" class="mt-4 text-gray-400 text-sm hover:text-gray-600">Cancel</button>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal || e.target.id === 'closeModalBtn') modal.remove();
+            });
+        }
+
         const vehicleCards = document.querySelectorAll('.vehicle-card');
         vehicleCards.forEach(card => {
             card.addEventListener('click', () => {
                 const vehicle = card.getAttribute('data-vehicle');
-                if (vehicle) {
+                const loggedUser = localStorage.getItem('loggedInUser');
+                if (!loggedUser) {
+                    showLoginModal(vehicle);
+                } else {
                     window.location.href = `book.html?vehicle=${vehicle}`;
                 }
             });
         });
     </script>
 </body>
-</html> 
+</html>

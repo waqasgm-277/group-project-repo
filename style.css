@@ -57,3 +57,37 @@ input:focus, select:focus, textarea:focus {
 .animate-slide-in { animation: slideIn 0.3s ease; }
 @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
+/* Force navbar above everything */
+nav.sticky, .sticky, .fixed {
+    z-index: 99999 !important;
+    position: sticky !important;
+    top: 0 !important;
+    background: rgba(255,255,255,0.9) !important;
+    backdrop-filter: blur(8px) !important;
+}
+
+/* Demote any map-related element */
+.leaflet-container,
+.leaflet-pane,
+.leaflet-top,
+.leaflet-bottom,
+.leaflet-control,
+.leaflet-control-container,
+.leaflet-popup,
+iframe[src*="map"],
+iframe[src*="google"],
+div[id*="map"],
+div[class*="map"],
+#map,
+.map-container,
+.map,
+[class*="leaflet"] {
+    z-index: 1 !important;
+    position: relative !important;
+}
+
+/* Also ensure the body doesn't create a higher stacking context */
+body {
+    position: relative;
+    z-index: auto;
+}

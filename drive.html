@@ -9,9 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="style.css">
     <style>
-        .form-input, .form-select, .form-textarea {
-            transition: all 0.2s ease;
-        }
+        .form-input, .form-select, .form-textarea { transition: all 0.2s ease; }
         .form-input:focus, .form-select:focus, .form-textarea:focus {
             outline: none;
             ring: 2px solid #8B6BB3;
@@ -24,21 +22,33 @@
         }
         .error-text {
             color: #ef4444;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             margin-top: 0.25rem;
             display: block;
+        }
+        .login-warning {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+        .btn-submit-enabled {
+            background: linear-gradient(135deg, #2A1E3D 0%, #6A4E8F 100%);
+        }
+        .btn-submit-disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
         }
     </style>
 </head>
 <body class="antialiased">
 
-    <!-- NAVBAR (same) -->
+    <!-- ================= NAVBAR (same as your website) ================= -->
     <nav class="w-full py-5 px-6 md:px-12 lg:px-24 bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
         <div class="max-w-7xl mx-auto flex justify-between items-center flex-wrap gap-4">
             <a href="index.html" class="flex items-center gap-2">
-                <div class="w-9 h-9 rounded-full gradient-bg flex items-center justify-center shadow-md">
-                    <i class="fas fa-venus text-white text-sm"></i>
-                </div>
+                <div class="w-9 h-9 rounded-full gradient-bg flex items-center justify-center shadow-md"><i class="fas fa-venus text-white text-sm"></i></div>
                 <span class="font-bold text-2xl tracking-tight gradient-text">SheDrives</span>
             </a>
             <div class="hidden md:flex items-center gap-6 font-medium text-gray-700">
@@ -76,7 +86,7 @@
         </section>
 
         <div class="max-w-6xl mx-auto px-4 md:px-8 py-12">
-            <!-- Requirements & Why Us -->
+            <!-- Requirements & Why Us (unchanged) -->
             <div class="grid md:grid-cols-2 gap-8 mb-12">
                 <div class="card-default p-6">
                     <h2 class="text-2xl font-bold flex items-center gap-2 mb-4"><i class="fas fa-clipboard-list text-[#6A4E8F]"></i> Requirements</h2>
@@ -102,92 +112,50 @@
                 </div>
             </div>
 
-            <!-- Application Form with STRICT Validation -->
+            <!-- Application Form -->
             <div class="card-default p-6 md:p-8">
                 <h2 class="text-2xl md:text-3xl font-bold text-center mb-2">Apply to Become a Driver</h2>
                 <p class="text-gray-500 text-center mb-8">All fields are required. Please fill in accurate information.</p>
                 
+                <!-- Login warning (only shown if not logged in) -->
+                <div id="loginWarning" class="login-warning">
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+                        <i class="fas fa-exclamation-triangle text-amber-600 text-xl"></i>
+                        <div class="flex-1">
+                            <p class="font-semibold text-gray-800">Login required</p>
+                            <p class="text-sm text-gray-600">You need to be logged in to submit this application.</p>
+                        </div>
+                        <div class="flex gap-2 mt-2 sm:mt-0">
+                            <a href="login.html?return=drive.html" class="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-lg text-sm font-semibold transition">Login</a>
+                            <a href="signup.html?return=drive.html" class="bg-[#6A4E8F] hover:bg-[#5a3d7a] text-white px-4 py-2 rounded-lg text-sm font-semibold transition">Sign up</a>
+                        </div>
+                    </div>
+                </div>
+
                 <form id="driverApplicationForm" class="space-y-6" novalidate>
                     <!-- Personal Details -->
                     <div>
                         <h3 class="text-xl font-semibold mb-4 pb-2 border-b border-gray-200"><i class="fas fa-user-circle text-[#6A4E8F] mr-2"></i> Personal Details</h3>
                         <div class="grid md:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block font-medium mb-1">Full Name *</label>
-                                <input type="text" id="fullName" class="form-input w-full border border-gray-200 rounded-xl px-4 py-3">
-                                <span class="error-text hidden" id="fullNameError">Please enter a valid name (letters, spaces, min 2 characters).</span>
-                            </div>
-                            <div>
-                                <label class="block font-medium mb-1">CNIC / NIC Number *</label>
-                                <input type="text" id="cnic" placeholder="12345-1234567-1" class="form-input w-full border border-gray-200 rounded-xl px-4 py-3">
-                                <span class="error-text hidden" id="cnicError">Enter valid CNIC: #####-#######-# (e.g., 12345-1234567-1).</span>
-                            </div>
-                            <div>
-                                <label class="block font-medium mb-1">Email Address *</label>
-                                <input type="email" id="email" class="form-input w-full border border-gray-200 rounded-xl px-4 py-3">
-                                <span class="error-text hidden" id="emailError">Enter a valid email address (e.g., name@example.com).</span>
-                            </div>
-                            <div>
-                                <label class="block font-medium mb-1">Phone Number *</label>
-                                <input type="tel" id="phone" placeholder="03XXXXXXXXX or +923XXXXXXXXX" class="form-input w-full border border-gray-200 rounded-xl px-4 py-3">
-                                <span class="error-text hidden" id="phoneError">Enter a valid Pakistani number (e.g., 03XX-XXXXXXX or +923XXXXXXXXX).</span>
-                            </div>
-                            <div class="md:col-span-2">
-                                <label class="block font-medium mb-1">Home Address *</label>
-                                <input type="text" id="address" class="form-input w-full border border-gray-200 rounded-xl px-4 py-3">
-                                <span class="error-text hidden" id="addressError">Address cannot be empty.</span>
-                            </div>
+                            <div><label class="block font-medium mb-1">Full Name *</label><input type="text" id="fullName" class="form-input w-full border border-gray-200 rounded-xl px-4 py-3"><span class="error-text hidden" id="fullNameError">Enter a valid name (letters & spaces, min 3 characters).</span></div>
+                            <div><label class="block font-medium mb-1">CNIC / NIC Number *</label><input type="text" id="cnic" placeholder="12345-1234567-1" class="form-input w-full border border-gray-200 rounded-xl px-4 py-3"><span class="error-text hidden" id="cnicError">Enter valid CNIC: #####-#######-#</span></div>
+                            <div><label class="block font-medium mb-1">Email Address *</label><input type="email" id="email" class="form-input w-full border border-gray-200 rounded-xl px-4 py-3"><span class="error-text hidden" id="emailError">Enter a valid email address.</span></div>
+                            <div><label class="block font-medium mb-1">Phone Number *</label><input type="tel" id="phone" placeholder="03XXXXXXXXX or +923XXXXXXXXX" class="form-input w-full border border-gray-200 rounded-xl px-4 py-3"><span class="error-text hidden" id="phoneError">Enter a valid Pakistani number.</span></div>
+                            <div class="md:col-span-2"><label class="block font-medium mb-1">Home Address *</label><input type="text" id="address" class="form-input w-full border border-gray-200 rounded-xl px-4 py-3"><span class="error-text hidden" id="addressError">Address cannot be empty.</span></div>
                         </div>
                     </div>
-
                     <!-- Driver & Vehicle Info -->
                     <div>
                         <h3 class="text-xl font-semibold mb-4 pb-2 border-b border-gray-200"><i class="fas fa-id-card text-[#6A4E8F] mr-2"></i> Driver & Vehicle Info</h3>
                         <div class="grid md:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block font-medium mb-1">Driving License Number *</label>
-                                <input type="text" id="licenseNumber" class="form-input w-full border border-gray-200 rounded-xl px-4 py-3">
-                                <span class="error-text hidden" id="licenseNumberError">License number must be at least 5 characters (letters, numbers, spaces, dashes allowed).</span>
-                            </div>
-                            <div>
-                                <label class="block font-medium mb-1">Years of Driving Experience *</label>
-                                <select id="experience" class="form-select w-full border border-gray-200 rounded-xl px-4 py-3">
-                                    <option value="">Select</option>
-                                    <option>Less than 1 year</option>
-                                    <option>1-3 years</option>
-                                    <option>3-5 years</option>
-                                    <option>5+ years</option>
-                                </select>
-                                <span class="error-text hidden" id="experienceError">Please select your experience.</span>
-                            </div>
-                            <div>
-                                <label class="block font-medium mb-1">Vehicle Make/Model *</label>
-                                <input type="text" id="vehicleModel" placeholder="e.g., Toyota Corolla 2020" class="form-input w-full border border-gray-200 rounded-xl px-4 py-3">
-                                <span class="error-text hidden" id="vehicleModelError">Please enter vehicle make and model.</span>
-                            </div>
-                            <div>
-                                <label class="block font-medium mb-1">Vehicle Registration Number *</label>
-                                <input type="text" id="vehicleReg" class="form-input w-full border border-gray-200 rounded-xl px-4 py-3">
-                                <span class="error-text hidden" id="vehicleRegError">Registration number required (e.g., ABC-123).</span>
-                            </div>
-                            <div>
-                                <label class="block font-medium mb-1">Vehicle Color *</label>
-                                <input type="text" id="vehicleColor" class="form-input w-full border border-gray-200 rounded-xl px-4 py-3">
-                                <span class="error-text hidden" id="vehicleColorError">Color cannot be empty.</span>
-                            </div>
-                            <div>
-                                <label class="block font-medium mb-1">Vehicle Year *</label>
-                                <select id="vehicleYear" class="form-select w-full border border-gray-200 rounded-xl px-4 py-3">
-                                    <option value="">Select Year</option>
-                                    <option>2024</option><option>2023</option><option>2022</option><option>2021</option><option>2020</option>
-                                    <option>2019</option><option>2018</option><option>2017</option><option>2016</option><option>2015</option>
-                                    <option>2014</option><option>2013</option><option>2012</option><option>2011</option><option>2010</option>
-                                </select>
-                                <span class="error-text hidden" id="vehicleYearError">Please select vehicle year.</span>
-                            </div>
+                            <div><label class="block font-medium mb-1">Driving License Number *</label><input type="text" id="licenseNumber" class="form-input w-full border border-gray-200 rounded-xl px-4 py-3"><span class="error-text hidden" id="licenseNumberError">At least 5 alphanumeric characters.</span></div>
+                            <div><label class="block font-medium mb-1">Years of Driving Experience *</label><select id="experience" class="form-select w-full border border-gray-200 rounded-xl px-4 py-3"><option value="">Select</option><option>Less than 1 year</option><option>1-3 years</option><option>3-5 years</option><option>5+ years</option></select><span class="error-text hidden" id="experienceError">Please select your experience.</span></div>
+                            <div><label class="block font-medium mb-1">Vehicle Make/Model *</label><input type="text" id="vehicleModel" placeholder="e.g., Toyota Corolla 2020" class="form-input w-full border border-gray-200 rounded-xl px-4 py-3"><span class="error-text hidden" id="vehicleModelError">Please enter vehicle make and model.</span></div>
+                            <div><label class="block font-medium mb-1">Vehicle Registration Number *</label><input type="text" id="vehicleReg" class="form-input w-full border border-gray-200 rounded-xl px-4 py-3"><span class="error-text hidden" id="vehicleRegError">Registration number required.</span></div>
+                            <div><label class="block font-medium mb-1">Vehicle Color *</label><input type="text" id="vehicleColor" class="form-input w-full border border-gray-200 rounded-xl px-4 py-3"><span class="error-text hidden" id="vehicleColorError">Color cannot be empty.</span></div>
+                            <div><label class="block font-medium mb-1">Vehicle Year *</label><select id="vehicleYear" class="form-select w-full border border-gray-200 rounded-xl px-4 py-3"><option value="">Select Year</option><option>2024</option><option>2023</option><option>2022</option><option>2021</option><option>2020</option><option>2019</option><option>2018</option><option>2017</option><option>2016</option><option>2015</option><option>2014</option><option>2013</option><option>2012</option><option>2011</option><option>2010</option></select><span class="error-text hidden" id="vehicleYearError">Please select vehicle year.</span></div>
                         </div>
                     </div>
-
                     <!-- Declaration -->
                     <div>
                         <h3 class="text-xl font-semibold mb-4 pb-2 border-b border-gray-200"><i class="fas fa-gavel text-[#6A4E8F] mr-2"></i> Declaration</h3>
@@ -200,7 +168,7 @@
                         <div id="checkboxError" class="error-text hidden text-red-500 mt-2">All declarations must be checked.</div>
                     </div>
 
-                    <button type="submit" class="w-full gradient-bg text-white font-bold py-4 rounded-xl text-lg btn-primary"><i class="fas fa-paper-plane mr-2"></i> Submit Application</button>
+                    <button type="submit" id="submitBtn" class="w-full text-white font-bold py-4 rounded-xl text-lg btn-submit-disabled" disabled>Submit Application</button>
                     <div id="formMessage" class="text-center mt-4 hidden"></div>
                 </form>
             </div>
@@ -208,12 +176,7 @@
     </main>
 
     <footer class="bg-gray-900 text-gray-300 py-12 mt-12">
-        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div><div class="flex items-center gap-2"><div class="w-8 h-8 rounded-full bg-white/20 flex justify-center items-center"><i class="fas fa-venus text-white"></i></div><span class="font-bold text-xl text-white">SheDrives</span></div><p class="text-sm mt-3">Safe rides, women drivers, zero compromise.</p><div class="flex gap-4 mt-5"><i class="fab fa-instagram text-xl hover:text-white cursor-pointer"></i><i class="fab fa-twitter text-xl hover:text-white cursor-pointer"></i><i class="fab fa-linkedin text-xl hover:text-white cursor-pointer"></i></div></div>
-            <div><h4 class="font-semibold text-white">Company</h4><ul class="mt-3 space-y-2 text-sm"><li>About us</li><li>Safety center</li></ul></div>
-            <div><h4 class="font-semibold text-white">Support</h4><ul class="mt-3 space-y-2 text-sm"><li>Help center</li><li>Contact support</li></ul></div>
-            <div><h4 class="font-semibold text-white">Legal</h4><ul class="mt-3 space-y-2 text-sm"><li>Privacy policy</li></ul></div>
-        </div>
+        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-8">...</div>
         <div class="text-center text-xs text-gray-500 mt-8">© 2025 SheDrives — Empowering women drivers worldwide.</div>
     </footer>
 
@@ -228,37 +191,100 @@
             closeBtn.onclick = () => mobileMenu.classList.add('translate-x-full');
         }
 
-        // ========== STRICT VALIDATION FUNCTIONS ==========
-        const validators = {
-            fullName: (val) => /^[A-Za-zÀ-ÿ]{2,}(?: [A-Za-zÀ-ÿ]+){1,}$/.test(val.trim()),
-            cnic: (val) => /^\d{5}-\d{7}-\d{1}$/.test(val.trim()),
-            email: (val) => /^[^\s@]+@([^\s@.,]+\.)+[^\s@.,]{2,}$/.test(val.trim()),
-            phone: (val) => /^(\+92|0)[3-9]\d{9}$/.test(val.replace(/[-\s]/g, '')),
-            address: (val) => val.trim().length >= 5,
-            licenseNumber: (val) => /^[A-Za-z0-9\s\-\.]{5,}$/.test(val.trim()),  // permissive: letters, numbers, spaces, dots, dashes, min 5
-            vehicleModel: (val) => val.trim().length >= 2,
-            vehicleReg: (val) => val.trim().length >= 3,
-            vehicleColor: (val) => val.trim().length >= 2
-        };
+        // Check if user is logged in
+        const loggedUser = localStorage.getItem('loggedInUser');
+        const warningDiv = document.getElementById('loginWarning');
+        const submitBtn = document.getElementById('submitBtn');
 
-        function showError(inputId, errorId, isValid) {
-            const input = document.getElementById(inputId);
-            const errorSpan = document.getElementById(errorId);
-            if (!errorSpan) return; // safety
-            if (!isValid) {
-                input.classList.add('error-border');
-                errorSpan.classList.remove('hidden');
-            } else {
-                input.classList.remove('error-border');
-                errorSpan.classList.add('hidden');
+        // Function to save all form fields to sessionStorage
+        function saveFormDataToSession() {
+            const formData = {
+                fullName: document.getElementById('fullName').value,
+                cnic: document.getElementById('cnic').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                address: document.getElementById('address').value,
+                licenseNumber: document.getElementById('licenseNumber').value,
+                experience: document.getElementById('experience').value,
+                vehicleModel: document.getElementById('vehicleModel').value,
+                vehicleReg: document.getElementById('vehicleReg').value,
+                vehicleColor: document.getElementById('vehicleColor').value,
+                vehicleYear: document.getElementById('vehicleYear').value,
+                cleanRecord: document.getElementById('cleanRecord').checked,
+                licenseValid: document.getElementById('licenseValid').checked,
+                vehicleCondition: document.getElementById('vehicleCondition').checked,
+                termsAgree: document.getElementById('termsAgree').checked
+            };
+            sessionStorage.setItem('pendingDriverApp', JSON.stringify(formData));
+        }
+
+        // Function to restore form data from sessionStorage
+        function restoreFormDataFromSession() {
+            const saved = sessionStorage.getItem('pendingDriverApp');
+            if (saved) {
+                const data = JSON.parse(saved);
+                document.getElementById('fullName').value = data.fullName || '';
+                document.getElementById('cnic').value = data.cnic || '';
+                document.getElementById('email').value = data.email || '';
+                document.getElementById('phone').value = data.phone || '';
+                document.getElementById('address').value = data.address || '';
+                document.getElementById('licenseNumber').value = data.licenseNumber || '';
+                if (data.experience) document.getElementById('experience').value = data.experience;
+                document.getElementById('vehicleModel').value = data.vehicleModel || '';
+                document.getElementById('vehicleReg').value = data.vehicleReg || '';
+                document.getElementById('vehicleColor').value = data.vehicleColor || '';
+                if (data.vehicleYear) document.getElementById('vehicleYear').value = data.vehicleYear;
+                document.getElementById('cleanRecord').checked = data.cleanRecord || false;
+                document.getElementById('licenseValid').checked = data.licenseValid || false;
+                document.getElementById('vehicleCondition').checked = data.vehicleCondition || false;
+                document.getElementById('termsAgree').checked = data.termsAgree || false;
+                // Clear session storage after restore
+                sessionStorage.removeItem('pendingDriverApp');
             }
         }
 
-        function validateField(fieldId, validatorKey) {
-            const value = document.getElementById(fieldId).value;
-            const isValid = validators[validatorKey] ? validators[validatorKey](value) : false;
-            // errorId is fieldId + 'Error' (must match HTML id)
-            showError(fieldId, fieldId + 'Error', isValid);
+        if (!loggedUser) {
+            // Not logged in: show warning, disable submit button, but allow typing
+            warningDiv.style.display = 'block';
+            submitBtn.disabled = true;
+            submitBtn.classList.add('btn-submit-disabled');
+            submitBtn.classList.remove('btn-submit-enabled');
+            
+            // When user clicks on Login or Signup links inside warning, save current form data first
+            const loginLinks = document.querySelectorAll('#loginWarning a');
+            loginLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    saveFormDataToSession();
+                    // Allow navigation (no preventDefault)
+                });
+            });
+        } else {
+            // Logged in: hide warning, enable submit button, restore any pending data
+            warningDiv.style.display = 'none';
+            submitBtn.disabled = false;
+            submitBtn.classList.add('btn-submit-enabled');
+            submitBtn.classList.remove('btn-submit-disabled');
+            restoreFormDataFromSession();
+        }
+
+        // ========== FORM VALIDATION (only runs if logged in, but we still attach listeners anyway) ==========
+        const nameRegex = /^[A-Za-zÀ-ÿ]{2,}(?: [A-Za-zÀ-ÿ]+)+$/;
+        const emailRegex = /^[^\s@]+@([^\s@.,]+\.)+[^\s@.,]{2,}$/;
+        const phoneRegex = /^(\+92|0)[3-9]\d{9}$/;
+        const cnicRegex = /^\d{5}-\d{7}-\d{1}$/;
+        const licenseRegex = /^[A-Za-z0-9\s\-\.]{5,}$/;
+
+        function validateField(input, regex, errorId) {
+            const val = input.value.trim();
+            const isValid = regex.test(val);
+            const errSpan = document.getElementById(errorId);
+            if (!isValid) {
+                input.classList.add('error-border');
+                if(errSpan) errSpan.classList.remove('hidden');
+            } else {
+                input.classList.remove('error-border');
+                if(errSpan) errSpan.classList.add('hidden');
+            }
             return isValid;
         }
 
@@ -281,54 +307,53 @@
             const vehicle = document.getElementById('vehicleCondition').checked;
             const terms = document.getElementById('termsAgree').checked;
             const allChecked = clean && license && vehicle && terms;
-            const errorDiv = document.getElementById('checkboxError');
-            if (!allChecked) {
-                errorDiv.classList.remove('hidden');
-            } else {
-                errorDiv.classList.add('hidden');
-            }
+            const errDiv = document.getElementById('checkboxError');
+            if (!allChecked) errDiv.classList.remove('hidden');
+            else errDiv.classList.add('hidden');
             return allChecked;
         }
 
-        // Attach real-time validation events
-        document.getElementById('fullName').addEventListener('input', () => validateField('fullName', 'fullName'));
-        document.getElementById('cnic').addEventListener('input', () => validateField('cnic', 'cnic'));
-        document.getElementById('email').addEventListener('input', () => validateField('email', 'email'));
-        document.getElementById('phone').addEventListener('input', () => validateField('phone', 'phone'));
-        document.getElementById('address').addEventListener('input', () => validateField('address', 'address'));
-        document.getElementById('licenseNumber').addEventListener('input', () => validateField('licenseNumber', 'licenseNumber'));
-        document.getElementById('vehicleModel').addEventListener('input', () => validateField('vehicleModel', 'vehicleModel'));
-        document.getElementById('vehicleReg').addEventListener('input', () => validateField('vehicleReg', 'vehicleReg'));
-        document.getElementById('vehicleColor').addEventListener('input', () => validateField('vehicleColor', 'vehicleColor'));
+        // Attach real-time validation regardless of login (it just shows/hides errors)
+        document.getElementById('fullName').addEventListener('input', () => validateField(document.getElementById('fullName'), nameRegex, 'fullNameError'));
+        document.getElementById('cnic').addEventListener('input', () => validateField(document.getElementById('cnic'), cnicRegex, 'cnicError'));
+        document.getElementById('email').addEventListener('input', () => validateField(document.getElementById('email'), emailRegex, 'emailError'));
+        document.getElementById('phone').addEventListener('input', () => validateField(document.getElementById('phone'), phoneRegex, 'phoneError'));
+        document.getElementById('address').addEventListener('input', () => validateField(document.getElementById('address'), /^.{5,}$/, 'addressError'));
+        document.getElementById('licenseNumber').addEventListener('input', () => validateField(document.getElementById('licenseNumber'), licenseRegex, 'licenseNumberError'));
+        document.getElementById('vehicleModel').addEventListener('input', () => validateField(document.getElementById('vehicleModel'), /^.{2,}$/, 'vehicleModelError'));
+        document.getElementById('vehicleReg').addEventListener('input', () => validateField(document.getElementById('vehicleReg'), /^.{3,}$/, 'vehicleRegError'));
+        document.getElementById('vehicleColor').addEventListener('input', () => validateField(document.getElementById('vehicleColor'), /^.{2,}$/, 'vehicleColorError'));
         document.getElementById('experience').addEventListener('change', () => validateSelect('experience', 'experienceError'));
         document.getElementById('vehicleYear').addEventListener('change', () => validateSelect('vehicleYear', 'vehicleYearError'));
 
-        // Form submission with full re-validation
+        // Submit only if logged in
         const form = document.getElementById('driverApplicationForm');
-        const messageDiv = document.getElementById('formMessage');
+        const msgDiv = document.getElementById('formMessage');
 
         form.addEventListener('submit', (e) => {
             e.preventDefault();
+            if (!loggedUser) {
+                // Should never happen because button is disabled, but just in case:
+                saveFormDataToSession();
+                window.location.href = 'login.html?return=drive.html';
+                return;
+            }
 
-            // Run all validations again on submit
-            const isNameValid = validateField('fullName', 'fullName');
-            const isCnicValid = validateField('cnic', 'cnic');
-            const isEmailValid = validateField('email', 'email');
-            const isPhoneValid = validateField('phone', 'phone');
-            const isAddressValid = validateField('address', 'address');
-            const isLicenseValid = validateField('licenseNumber', 'licenseNumber');
-            const isVehicleModelValid = validateField('vehicleModel', 'vehicleModel');
-            const isVehicleRegValid = validateField('vehicleReg', 'vehicleReg');
-            const isVehicleColorValid = validateField('vehicleColor', 'vehicleColor');
-            const isExperienceValid = validateSelect('experience', 'experienceError');
-            const isYearValid = validateSelect('vehicleYear', 'vehicleYearError');
-            const areCheckboxesValid = validateCheckboxes();
+            // Validate all fields
+            const isName = validateField(document.getElementById('fullName'), nameRegex, 'fullNameError');
+            const isCnic = validateField(document.getElementById('cnic'), cnicRegex, 'cnicError');
+            const isEmail = validateField(document.getElementById('email'), emailRegex, 'emailError');
+            const isPhone = validateField(document.getElementById('phone'), phoneRegex, 'phoneError');
+            const isAddress = validateField(document.getElementById('address'), /^.{5,}$/, 'addressError');
+            const isLicense = validateField(document.getElementById('licenseNumber'), licenseRegex, 'licenseNumberError');
+            const isVehicleModel = validateField(document.getElementById('vehicleModel'), /^.{2,}$/, 'vehicleModelError');
+            const isVehicleReg = validateField(document.getElementById('vehicleReg'), /^.{3,}$/, 'vehicleRegError');
+            const isVehicleColor = validateField(document.getElementById('vehicleColor'), /^.{2,}$/, 'vehicleColorError');
+            const isExperience = validateSelect('experience', 'experienceError');
+            const isYear = validateSelect('vehicleYear', 'vehicleYearError');
+            const isCheckboxes = validateCheckboxes();
 
-            const allValid = isNameValid && isCnicValid && isEmailValid && isPhoneValid && isAddressValid &&
-                             isLicenseValid && isVehicleModelValid && isVehicleRegValid && isVehicleColorValid &&
-                             isExperienceValid && isYearValid && areCheckboxesValid;
-
-            if (allValid) {
+            if (isName && isCnic && isEmail && isPhone && isAddress && isLicense && isVehicleModel && isVehicleReg && isVehicleColor && isExperience && isYear && isCheckboxes) {
                 // Save to localStorage
                 let applications = JSON.parse(localStorage.getItem('sheDrivesDriverApps') || '[]');
                 applications.push({
@@ -351,25 +376,14 @@
                     status: 'pending'
                 });
                 localStorage.setItem('sheDrivesDriverApps', JSON.stringify(applications));
-
-                // Clear form
                 form.reset();
-                // Remove all error borders and hide error messages
-                document.querySelectorAll('.error-border').forEach(el => el.classList.remove('error-border'));
-                document.querySelectorAll('.error-text').forEach(el => el.classList.add('hidden'));
-
-                // Show success message
-                messageDiv.classList.remove('hidden');
-                messageDiv.innerHTML = '<div class="bg-green-100 text-green-700 p-4 rounded-xl"><i class="fas fa-check-circle mr-2"></i> Application submitted successfully! We will contact you as soon as possible.</div>';
-                setTimeout(() => {
-                    messageDiv.classList.add('hidden');
-                    messageDiv.innerHTML = '';
-                }, 8000);
+                // Success message
+                msgDiv.classList.remove('hidden');
+                msgDiv.innerHTML = '<div class="bg-green-100 text-green-700 p-4 rounded-xl"><i class="fas fa-check-circle mr-2"></i> Application submitted successfully! We will contact you as soon as possible.</div>';
+                setTimeout(() => { msgDiv.classList.add('hidden'); msgDiv.innerHTML = ''; }, 8000);
             } else {
-                // Scroll to the first error field
-                const firstError = document.querySelector('.error-border');
-                if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                // Temporary popup
+                const firstErr = document.querySelector('.error-border');
+                if (firstErr) firstErr.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 const tempMsg = document.createElement('div');
                 tempMsg.className = 'fixed top-24 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-6 py-3 rounded-xl shadow-lg z-50 text-sm';
                 tempMsg.innerText = 'Please fix all errors before submitting.';

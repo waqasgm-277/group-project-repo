@@ -3,43 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>SheDrives · Live Ride Tracking</title>
+    <title>FemGO · Find My Location</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- Leaflet CSS + JS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <link rel="stylesheet" href="style.css">
     <style>
-        #map { height: 500px; width: 100%; border-radius: 1rem; z-index: 1; }
-        .leaflet-control-attribution { font-size: 9px; }
+        .gradient-bg { background: linear-gradient(135deg, #6A4E8F 0%, #A280C9 100%); }
+        .logo-img { max-height: 90px; width: auto; }
+        #map { height: 500px; width: 100%; border-radius: 1.5rem; z-index: 1; position: relative; box-shadow: 0 20px 35px -12px rgba(0,0,0,0.15); }
+        .animate-slide-in { animation: slideIn 0.3s ease; }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .floating-shape { position: fixed; background: rgba(106,78,143,0.05); border-radius: 50%; pointer-events: none; z-index: 0; animation: float 20s infinite ease-in-out; }
+        @keyframes float { 0% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-30px) rotate(5deg); } 100% { transform: translateY(0px) rotate(0deg); } }
+        .get-location-btn { transition: all 0.2s; }
+        .get-location-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px -5px rgba(106,78,143,0.4); }
     </style>
 </head>
-<body class="antialiased">
+<body class="relative bg-gradient-to-br from-[#F9F5FF] to-white">
 
-    <!-- ================= NAVBAR ================= -->
-    <nav class="w-full py-5 px-6 md:px-12 lg:px-24 bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
-        <div class="max-w-7xl mx-auto flex justify-between items-center flex-wrap gap-4">
-            <a href="index.html" class="flex items-center gap-2">
-                <div class="w-9 h-9 rounded-full gradient-bg flex items-center justify-center shadow-md">
-                    <i class="fas fa-venus text-white text-sm"></i>
-                </div>
-                <span class="font-bold text-2xl tracking-tight gradient-text">SheDrives</span>
-            </a>
+    <div class="floating-shape w-64 h-64 top-20 left-10" style="animation-delay: 0s;"></div>
+    <div class="floating-shape w-96 h-96 bottom-20 right-10" style="animation-delay: 3s;"></div>
+    <div class="floating-shape w-48 h-48 top-1/3 right-1/4" style="animation-delay: 7s;"></div>
+    <div class="floating-shape w-80 h-80 bottom-1/3 left-1/5" style="animation-delay: 12s;"></div>
+
+    <nav class="w-full py-3 px-6 md:px-12 lg:px-24 bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center"><img src="/logo.png" alt="FemGO Logo" class="logo-img"></div>
             <div class="hidden md:flex items-center gap-6 font-medium text-gray-700">
-                <a href="index.html">Home</a>
-                <a href="contact.html">Contact</a>
-                <a href="weather.html">Weather</a>
-                <a href="location.html" class="text-[#6A4E8F] font-semibold">Location</a>
+                <a href="index.html" class="hover:text-[#6A4E8F] transition text-md">Home</a>
+                <a href="index.html#how-it-works" class="hover:text-[#6A4E8F] transition text-md">How it works</a>
+                <a href="index.html#safety" class="hover:text-[#6A4E8F] transition text-md">Safety</a>
+                <a href="contact.html" class="hover:text-[#6A4E8F] transition text-md">Contact</a>
+                <a href="weather.html" class="hover:text-[#6A4E8F] transition text-md">Weather</a>
+                <a href="location.html" class="hover:text-[#6A4E8F] transition text-md font-semibold">Location</a>
                 <div id="authNavLinks" class="flex gap-3 ml-2"></div>
             </div>
             <button id="mobileMenuBtn" class="md:hidden text-2xl text-gray-700"><i class="fas fa-bars"></i></button>
         </div>
         <div id="mobileMenu" class="fixed inset-0 bg-white z-50 transform translate-x-full transition-transform duration-300 md:hidden">
             <div class="flex justify-end p-6"><button id="closeMenuBtn" class="text-2xl"><i class="fas fa-times"></i></button></div>
-            <div class="flex flex-col items-center gap-7 text-xl font-medium pt-10">
+            <div class="flex flex-col items-center gap-6 text-xl font-medium pt-10">
                 <a href="index.html">Home</a>
+                <a href="index.html#how-it-works">How it works</a>
+                <a href="index.html#safety">Safety</a>
                 <a href="contact.html">Contact</a>
                 <a href="weather.html">Weather</a>
                 <a href="location.html">Location</a>
@@ -48,288 +56,137 @@
         </div>
     </nav>
 
-    <main class="max-w-6xl mx-auto px-4 md:px-8 py-10">
-        <div class="card-default p-6 md:p-8">
-            <h1 class="text-3xl font-bold flex items-center gap-3"><i class="fas fa-map-marked-alt text-[#6A4E8F]"></i> Live ride tracking</h1>
-            <p class="text-gray-500 mt-1">See your real‑time location, set your destination, and watch the blue route shrink as you move.</p>
+    <main class="max-w-7xl mx-auto px-6 md:px-12 py-12 relative z-10">
+        <div class="text-center mb-8">
+            <h1 class="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-[#2A1E3D] to-[#6A4E8F] bg-clip-text text-transparent">Interactive Map</h1>
+            <p class="text-gray-500 mt-2 text-lg">Find streets, shops, landmarks and your current location.</p>
+        </div>
 
-            <!-- Destination input & controls -->
-            <div class="flex flex-col md:flex-row gap-4 mt-6">
-                <div class="flex-1">
-                    <input type="text" id="destinationInput" placeholder="Enter destination (e.g., Clifton, Karachi)" class="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#6A4E8F]">
-                </div>
-                <button id="setDestinationBtn" class="gradient-bg text-white px-6 py-3 rounded-xl font-bold shadow-md">📍 Set destination</button>
-                <button id="centerMyLocationBtn" class="border border-[#6A4E8F] text-[#6A4E8F] px-6 py-3 rounded-xl font-bold hover:bg-[#6A4E8F]/10 transition"><i class="fas fa-location-dot mr-1"></i> Center on me</button>
+        <div class="card-default p-1 rounded-2xl shadow-2xl bg-white/90 backdrop-blur-sm">
+            <div id="map"></div>
+            <div class="flex justify-center mt-6 mb-4">
+                <button id="getLocationBtn" class="get-location-btn bg-gradient-to-r from-[#6A4E8F] to-[#A280C9] text-white font-bold py-3 px-8 rounded-full shadow-md hover:shadow-xl transition flex items-center gap-2">
+                    <i class="fas fa-location-dot"></i> <span>Get My Current Location</span>
+                </button>
             </div>
+            <p class="text-center text-xs text-gray-400 pb-4">📍 Your privacy is important. Location is used only to show your position on the map.</p>
+        </div>
 
-            <!-- Map container -->
-            <div id="map" class="mt-6 rounded-2xl overflow-hidden shadow-lg"></div>
-
-            <!-- Info panel -->
-            <div id="trackingInfo" class="mt-4 bg-gray-50 p-4 rounded-xl text-center font-medium text-gray-700">
-                <i class="fas fa-info-circle text-[#6A4E8F] mr-2"></i> Enter a destination to start tracking.
+        <div class="grid md:grid-cols-3 gap-6 mt-12">
+            <div class="bg-white/60 backdrop-blur-sm rounded-2xl p-5 text-center shadow-sm hover:shadow-md transition">
+                <i class="fas fa-shield-alt text-3xl text-[#6A4E8F] mb-3"></i>
+                <h3 class="font-bold text-gray-800">Safe & Secure</h3>
+                <p class="text-sm text-gray-500">Your location is never shared without your permission.</p>
             </div>
-
-            <!-- SOS button -->
-            <div class="mt-6 flex justify-center">
-                <button id="sosBtnTracking" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded-xl shadow-md transition flex items-center gap-2"><i class="fas fa-exclamation-triangle"></i> SOS Emergency (share location)</button>
+            <div class="bg-white/60 backdrop-blur-sm rounded-2xl p-5 text-center shadow-sm hover:shadow-md transition">
+                <i class="fas fa-store text-3xl text-[#6A4E8F] mb-3"></i>
+                <h3 class="font-bold text-gray-800">Streets & Shops</h3>
+                <p class="text-sm text-gray-500">See street names, shops, hospitals, schools, and more.</p>
+            </div>
+            <div class="bg-white/60 backdrop-blur-sm rounded-2xl p-5 text-center shadow-sm hover:shadow-md transition">
+                <i class="fas fa-sync-alt text-3xl text-[#6A4E8F] mb-3"></i>
+                <h3 class="font-bold text-gray-800">Real‑time</h3>
+                <p class="text-sm text-gray-500">Instantly center on your location with one click.</p>
             </div>
         </div>
     </main>
 
-    <footer class="bg-gray-900 text-gray-300 py-12 mt-12">
-        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div><div class="flex items-center gap-2"><div class="w-8 h-8 rounded-full bg-white/20 flex justify-center items-center"><i class="fas fa-venus text-white"></i></div><span class="font-bold text-xl text-white">SheDrives</span></div><p class="text-sm mt-3">Safe rides, women drivers.</p></div>
-            <div><h4 class="font-semibold text-white">Company</h4><ul class="mt-3 space-y-2 text-sm"><li>About us</li><li>Safety center</li></ul></div>
-            <div><h4 class="font-semibold text-white">Support</h4><ul class="mt-3 space-y-2 text-sm"><li>Help center</li><li>Contact support</li></ul></div>
-            <div><h4 class="font-semibold text-white">Legal</h4><ul class="mt-3 space-y-2 text-sm"><li>Privacy policy</li></ul></div>
+    <footer class="bg-gray-900 text-gray-300 pt-14 pb-6 mt-12">
+        <div class="max-w-7xl mx-auto px-6 md:px-12">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+                <div>
+                    <div class="flex items-center gap-2 mb-4"><img src="logo.png" alt="FemGO Logo" class="h-12 w-auto"><span class="font-bold text-xl text-white">FemGO</span></div>
+                    <p class="text-sm text-gray-400 leading-relaxed mb-4">Safe rides, women drivers, zero compromise. Empowering women to travel with confidence, anytime, anywhere.</p>
+                    <div class="flex gap-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition text-xl"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition text-xl"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition text-xl"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition text-xl"><i class="fab fa-facebook-f"></i></a>
+                    </div>
+                </div>
+                <div><h4 class="font-semibold text-white text-lg mb-4">Company</h4><ul class="space-y-2 text-sm"><li><a href="#" class="text-gray-400 hover:text-white transition">About Us</a></li><li><a href="#" class="text-gray-400 hover:text-white transition">How It Works</a></li><li><a href="drive.html" class="text-gray-400 hover:text-white transition">Become a Driver</a></li><li><a href="#" class="text-gray-400 hover:text-white transition">Safety Center</a></li><li><a href="#" class="text-gray-400 hover:text-white transition">Careers</a></li></ul></div>
+                <div><h4 class="font-semibold text-white text-lg mb-4">Support</h4><ul class="space-y-2 text-sm"><li><a href="contact.html" class="text-gray-400 hover:text-white transition">Contact Us</a></li><li><a href="#" class="text-gray-400 hover:text-white transition">Help Center</a></li><li><a href="#" class="text-gray-400 hover:text-white transition">Safety Tips</a></li><li><a href="#" class="text-gray-400 hover:text-white transition">Community Guidelines</a></li><li><a href="#" class="text-gray-400 hover:text-white transition">FAQs</a></li></ul></div>
+                <div><h4 class="font-semibold text-white text-lg mb-4">Stay Updated</h4><p class="text-sm text-gray-400 mb-3">Subscribe for exclusive offers & safety tips.</p><div class="flex flex-col sm:flex-row gap-2 mb-6"><input type="email" placeholder="Your email address" class="flex-1 bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#6A4E8F]"><button class="bg-gradient-to-r from-[#6A4E8F] to-[#A280C9] text-white px-4 py-2 rounded-lg text-sm font-semibold hover:opacity-90 transition">Subscribe</button></div><div><h4 class="font-semibold text-white text-sm mb-2">Download the App</h4><div class="flex gap-3"><a href="#" class="bg-gray-800 hover:bg-gray-700 rounded-lg px-3 py-2 flex items-center gap-2 transition"><i class="fab fa-apple text-lg"></i><span class="text-xs">App Store</span></a><a href="#" class="bg-gray-800 hover:bg-gray-700 rounded-lg px-3 py-2 flex items-center gap-2 transition"><i class="fab fa-google-play text-lg"></i><span class="text-xs">Google Play</span></a></div></div></div>
+            </div>
+            <div class="border-t border-gray-800 mt-12 pt-6 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-500"><p>© 2025 FemGO — All-female ride hailing. Empowering journeys for women worldwide.</p><div class="flex gap-6"><a href="#" class="hover:text-white transition">Privacy Policy</a><a href="#" class="hover:text-white transition">Terms of Service</a><a href="#" class="hover:text-white transition">Cookie Preferences</a></div></div>
         </div>
-        <div class="text-center text-xs text-gray-500 mt-8">© 2025 SheDrives — Live ride companion</div>
     </footer>
 
     <script src="auth.js"></script>
     <script>
-        // ================= MAP INITIALIZATION =================
-        let map;
-        let currentLocationMarker = null;
-        let destinationMarker = null;
-        let routeLine = null;
-        let watchId = null;
-        let currentLat = null, currentLng = null;
-        let destLat = null, destLng = null;
+        const menuBtn = document.getElementById('mobileMenuBtn');
+        const closeBtn = document.getElementById('closeMenuBtn');
+        const mobileMenuDiv = document.getElementById('mobileMenu');
+        if(menuBtn && closeBtn && mobileMenuDiv) {
+            menuBtn.onclick = () => mobileMenuDiv.classList.remove('translate-x-full');
+            closeBtn.onclick = () => mobileMenuDiv.classList.add('translate-x-full');
+            document.querySelectorAll('#mobileMenu a').forEach(link => link.addEventListener('click', () => mobileMenuDiv.classList.add('translate-x-full')));
+        }
 
-        const defaultCenter = [24.8607, 67.0011]; // Karachi
+        let map;
+        let userMarker = null;
 
         function initMap() {
-            map = L.map('map').setView(defaultCenter, 13);
-            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; CartoDB',
-                subdomains: 'abcd',
+            map = L.map('map').setView([24.8607, 67.0011], 13);
+            // Use OpenStreetMap's standard tile layer (shows street names, shops, buildings)
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
                 maxZoom: 19
             }).addTo(map);
         }
 
-        // Geocode address to coordinates (Nominatim)
-        async function geocodeAddress(address) {
-            const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address)}&format=json&limit=1`;
-            const response = await fetch(url);
-            const data = await response.json();
-            if (data && data[0]) {
-                return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) };
-            }
-            throw new Error('Destination not found');
-        }
-
-        // Get road-following route from OSRM (free, no API key)
-        async function getRouteFromOSRM(startLat, startLng, endLat, endLng) {
-            const url = `https://router.project-osrm.org/route/v1/driving/${startLng},${startLat};${endLng},${endLat}?overview=full&geometries=geojson`;
-            const response = await fetch(url);
-            const data = await response.json();
-            if (data.code === 'Ok' && data.routes && data.routes.length > 0) {
-                const coords = data.routes[0].geometry.coordinates; // [lng, lat]
-                // Convert to Leaflet format [lat, lng]
-                return coords.map(coord => [coord[1], coord[0]]);
-            } else {
-                throw new Error('No route found');
-            }
-        }
-
-        // Update route line using OSRM (road network)
-        async function updateRouteLine() {
-            if (routeLine) map.removeLayer(routeLine);
-            if (currentLat && currentLng && destLat && destLng) {
-                try {
-                    const roadLatLngs = await getRouteFromOSRM(currentLat, currentLng, destLat, destLng);
-                    if (roadLatLngs && roadLatLngs.length > 0) {
-                        routeLine = L.polyline(roadLatLngs, {
-                            color: '#0077ff',
-                            weight: 5,
-                            opacity: 0.8
-                        }).addTo(map);
-                        
-                        // Calculate distance along route
-                        let distance = 0;
-                        for (let i = 0; i < roadLatLngs.length - 1; i++) {
-                            distance += getDistanceFromLatLonInKm(
-                                roadLatLngs[i][0], roadLatLngs[i][1],
-                                roadLatLngs[i+1][0], roadLatLngs[i+1][1]
-                            );
-                        }
-                        const distanceText = distance < 1 ? `${Math.round(distance * 1000)} m` : `${distance.toFixed(2)} km`;
-                        document.getElementById('trackingInfo').innerHTML = `
-                            <i class="fas fa-road text-[#6A4E8F] mr-2"></i> 
-                            <span class="font-medium">Remaining distance:</span> ${distanceText}
-                            <br><span class="text-sm text-gray-500">Route follows roads (OSRM).</span>
-                        `;
-                        // Fit map to route bounds
-                        const bounds = L.latLngBounds(roadLatLngs);
-                        map.fitBounds(bounds);
-                    } else {
-                        document.getElementById('trackingInfo').innerHTML = `<span class="text-red-500">Could not calculate road route. Try different destination.</span>`;
-                    }
-                } catch (err) {
-                    console.error(err);
-                    document.getElementById('trackingInfo').innerHTML = `<span class="text-red-500">Routing error: ${err.message}</span>`;
-                }
-            } else if (currentLat && currentLng) {
-                document.getElementById('trackingInfo').innerHTML = `<i class="fas fa-map-marker-alt text-green-600 mr-2"></i> Live location active. Set a destination to start tracking.`;
-            }
-        }
-
-        function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
-            const R = 6371;
-            const dLat = deg2rad(lat2 - lat1);
-            const dLon = deg2rad(lon2 - lon1);
-            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-                      Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
-                      Math.sin(dLon/2) * Math.sin(dLon/2);
-            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-            return R * c;
-        }
-        function deg2rad(deg) { return deg * (Math.PI/180); }
-
-        // Update current location marker
-        function updateCurrentLocation(lat, lng) {
-            if (currentLocationMarker) map.removeLayer(currentLocationMarker);
-            currentLocationMarker = L.marker([lat, lng], {
+        function addUserMarker(lat, lng) {
+            if (userMarker) map.removeLayer(userMarker);
+            userMarker = L.marker([lat, lng], {
                 icon: L.divIcon({
                     className: 'custom-div-icon',
-                    html: '<div style="background-color:#6A4E8F; width:16px; height:16px; border-radius:50%; border:3px solid white; box-shadow:0 0 4px black;"></div>',
-                    iconSize: [16,16],
-                    popupAnchor: [0,0]
+                    html: '<div style="background-color:#6A4E8F; width:20px; height:20px; border-radius:50%; border:3px solid white; box-shadow:0 0 0 2px #6A4E8F;"></div>',
+                    iconSize: [20, 20],
+                    popupAnchor: [0, -10]
                 })
             }).addTo(map);
-            currentLocationMarker.bindPopup('<b>You are here</b>').openPopup();
-            currentLat = lat;
-            currentLng = lng;
-            if (destLat && destLng) {
-                updateRouteLine(); // recalc route when location changes
-            }
+            userMarker.bindPopup('<b>You are here</b><br>📍 Latitude: ' + lat.toFixed(6) + '<br>📍 Longitude: ' + lng.toFixed(6)).openPopup();
         }
 
-        // Watch user location
-        function startWatchingLocation() {
-            if (watchId) navigator.geolocation.clearWatch(watchId);
-            watchId = navigator.geolocation.watchPosition(
+        const getLocationBtn = document.getElementById('getLocationBtn');
+        getLocationBtn.addEventListener('click', () => {
+            if (!navigator.geolocation) {
+                alert("Geolocation is not supported by your browser.");
+                return;
+            }
+            getLocationBtn.disabled = true;
+            getLocationBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Getting location...';
+            navigator.geolocation.getCurrentPosition(
                 (position) => {
                     const lat = position.coords.latitude;
                     const lng = position.coords.longitude;
-                    updateCurrentLocation(lat, lng);
-                    if (!destLat && !destLng) {
-                        map.setView([lat, lng], 15);
-                    }
+                    addUserMarker(lat, lng);
+                    map.setView([lat, lng], 17);
+                    getLocationBtn.disabled = false;
+                    getLocationBtn.innerHTML = '<i class="fas fa-location-dot"></i> Get My Current Location';
+                    const toast = document.createElement('div');
+                    toast.className = 'fixed bottom-5 right-5 bg-green-100 text-green-700 px-4 py-2 rounded-full shadow-lg z-50 text-sm animate-slide-in';
+                    toast.innerHTML = '<i class="fas fa-check-circle mr-1"></i> Location found! Map centered.';
+                    document.body.appendChild(toast);
+                    setTimeout(() => toast.remove(), 3000);
                 },
                 (error) => {
-                    console.error(error);
-                    document.getElementById('trackingInfo').innerHTML = '<span class="text-red-500"><i class="fas fa-exclamation-triangle"></i> Could not get your location. Please enable GPS.</span>';
+                    let errorMsg = "";
+                    switch(error.code) {
+                        case error.PERMISSION_DENIED: errorMsg = "Location access denied. Please allow location in browser settings."; break;
+                        case error.POSITION_UNAVAILABLE: errorMsg = "Location information unavailable. Check your GPS."; break;
+                        case error.TIMEOUT: errorMsg = "Location request timed out. Try again."; break;
+                        default: errorMsg = "An unknown error occurred.";
+                    }
+                    alert(errorMsg);
+                    getLocationBtn.disabled = false;
+                    getLocationBtn.innerHTML = '<i class="fas fa-location-dot"></i> Get My Current Location';
                 },
-                { enableHighAccuracy: true, maximumAge: 5000, timeout: 10000 }
+                { enableHighAccuracy: true, timeout: 10000 }
             );
-        }
-
-        // Set destination
-        async function setDestination() {
-            const address = document.getElementById('destinationInput').value.trim();
-            if (!address) {
-                alert('Please enter a destination.');
-                return;
-            }
-            try {
-                document.getElementById('trackingInfo').innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Finding destination and calculating road route...';
-                const coords = await geocodeAddress(address);
-                destLat = coords.lat;
-                destLng = coords.lng;
-                if (destinationMarker) map.removeLayer(destinationMarker);
-                destinationMarker = L.marker([destLat, destLng], {
-                    icon: L.divIcon({
-                        className: 'custom-div-icon',
-                        html: '<div style="background-color:#22c55e; width:18px; height:18px; border-radius:50%; border:3px solid white;"></div>',
-                        iconSize: [18,18]
-                    })
-                }).addTo(map);
-                destinationMarker.bindPopup(`<b>Destination:</b> ${address}`).openPopup();
-                
-                if (currentLat && currentLng) {
-                    await updateRouteLine();
-                } else {
-                    document.getElementById('trackingInfo').innerHTML = '<i class="fas fa-map-marker-alt text-green-600 mr-2"></i> Destination set. Waiting for current location...';
-                    map.setView([destLat, destLng], 14);
-                }
-            } catch (err) {
-                alert('Could not find that destination. Try a different name.');
-                document.getElementById('trackingInfo').innerHTML = '<span class="text-red-500">Destination not found. Please try again.</span>';
-            }
-        }
-
-        function centerOnMe() {
-            if (currentLat && currentLng) {
-                map.setView([currentLat, currentLng], 16);
-            } else {
-                alert('Waiting for your location. Please allow GPS access.');
-            }
-        }
-
-        function sosEmergency() {
-            if (currentLat && currentLng) {
-                const mapsLink = `https://www.google.com/maps?q=${currentLat},${currentLng}`;
-                alert(`🚨 SOS EMERGENCY\n\nYour current coordinates:\n${currentLat.toFixed(6)}, ${currentLng.toFixed(6)}\n\n📍 Google Maps: ${mapsLink}\n\nThis alert has been sent to the nearest police station (simulated). Help is on the way.`);
-            } else {
-                alert('Unable to get your location. Please enable GPS and try again.');
-            }
-        }
-
-        // Initialization
-        document.addEventListener('DOMContentLoaded', () => {
-            initMap();
-            if (navigator.geolocation) {
-                startWatchingLocation();
-            } else {
-                document.getElementById('trackingInfo').innerHTML = '<span class="text-red-500">Geolocation not supported by your browser.</span>';
-            }
-            document.getElementById('setDestinationBtn').addEventListener('click', setDestination);
-            document.getElementById('centerMyLocationBtn').addEventListener('click', centerOnMe);
-            document.getElementById('sosBtnTracking').addEventListener('click', sosEmergency);
         });
 
-        // Mobile menu
-        const menuBtn = document.getElementById('mobileMenuBtn');
-        const closeBtn = document.getElementById('closeMenuBtn');
-        const mobileMenu = document.getElementById('mobileMenu');
-        if(menuBtn && closeBtn && mobileMenu) {
-            menuBtn.onclick = () => mobileMenu.classList.remove('translate-x-full');
-            closeBtn.onclick = () => mobileMenu.classList.add('translate-x-full');
-        }
+        window.addEventListener('load', initMap);
     </script>
-
-<script>
-    function updateLocationLink() {
-        const activeRide = localStorage.getItem('activeRide');
-        const isActive = activeRide && (Date.now() - (JSON.parse(activeRide).timestamp || 0) < 3600000);
-        const target = isActive ? 'tracking.html' : 'location.html';
-        const links = document.querySelectorAll('#locationNavLink, #mobileLocationLink');
-        links.forEach(link => { if(link) link.href = target; });
-    }
-    updateLocationLink();
-    window.addEventListener('storage', updateLocationLink);
-</script>
-
-
-<script>
-    function updateLocationLink() {
-        const activeRide = localStorage.getItem('activeRide');
-        const isActive = activeRide && (Date.now() - (JSON.parse(activeRide).timestamp || 0) < 3600000);
-        const target = isActive ? 'tracking.html' : 'location.html';
-        document.querySelectorAll('#locationNavLink, #mobileLocationLink').forEach(link => { if(link) link.href = target; });
-    }
-    updateLocationLink();
-    window.addEventListener('storage', updateLocationLink);
-</script>
-
-
-
 </body>
-
-
-
-
 </html>

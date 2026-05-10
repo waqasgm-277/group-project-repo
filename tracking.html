@@ -2,288 +2,140 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>SheDrives · Ride Tracking</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SheDrives · Live Tracking</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
-    <!-- Leaflet -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
-        #map { height: 500px; width: 100%; border-radius: 1rem; z-index: 1; }
-        .eta-card { background: rgba(255,255,255,0.95); border-radius: 1rem; padding: 0.75rem; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-        .driver-icon {
-            background: #3b82f6;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            border: 3px solid white;
-            box-shadow: 0 0 0 2px #3b82f6;
-        }
-        .passenger-icon {
-            background: #6A4E8F;
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            border: 2px solid white;
-            box-shadow: 0 0 0 2px #6A4E8F;
-        }
+        nav { z-index: 1000 !important; position: sticky; top: 0; }
+        #map { z-index: 1; position: relative; height: 500px; width: 100%; border-radius: 1rem; }
+        .leaflet-control-attribution { z-index: 1; }
+        .eta-card { background: white; border-radius: 1rem; padding: 0.75rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
     </style>
 </head>
-<body class="antialiased">
+<body class="bg-gray-50">
+<nav class="w-full py-5 px-6 md:px-12 bg-white/80 backdrop-blur-md shadow-sm">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+        <a href="index.html" class="flex items-center gap-2"><div class="w-9 h-9 rounded-full gradient-bg flex justify-center items-center"><i class="fas fa-venus text-white"></i></div><span class="font-bold text-2xl gradient-text">SheDrives</span></a>
+        <div class="hidden md:flex gap-6"><a href="index.html">Home</a><a href="contact.html">Contact</a><a href="weather.html">Weather</a><a href="location.html">Location</a><div id="authNavLinks"></div></div>
+        <button id="mobileMenuBtn" class="md:hidden text-2xl"><i class="fas fa-bars"></i></button>
+    </div>
+    <div id="mobileMenu" class="fixed inset-0 bg-white z-50 transform translate-x-full transition-transform duration-300 md:hidden"><div class="flex justify-end p-6"><button id="closeMenuBtn" class="text-2xl"><i class="fas fa-times"></i></button></div><div class="flex flex-col items-center gap-7 text-xl pt-10"><a href="index.html">Home</a><a href="contact.html">Contact</a><a href="weather.html">Weather</a><a href="location.html">Location</a><div id="mobileAuthLinks"></div></div></div>
+</nav>
 
-    <!-- Same navbar as other pages -->
-    <nav class="w-full py-5 px-6 md:px-12 lg:px-24 bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
-        <div class="max-w-7xl mx-auto flex justify-between items-center flex-wrap gap-4">
-            <a href="index.html" class="flex items-center gap-2">
-                <div class="w-9 h-9 rounded-full gradient-bg flex items-center justify-center shadow-md">
-                    <i class="fas fa-venus text-white text-sm"></i>
-                </div>
-                <span class="font-bold text-2xl tracking-tight gradient-text">SheDrives</span>
-            </a>
-            <div class="hidden md:flex items-center gap-6 font-medium text-gray-700">
-                <a href="index.html">Home</a>
-                <a href="contact.html">Contact</a>
-                <a href="weather.html">Weather</a>
-                <a href="location.html">Location</a>
-                <div id="authNavLinks" class="flex gap-3 ml-2"></div>
-            </div>
-            <button id="mobileMenuBtn" class="md:hidden text-2xl text-gray-700"><i class="fas fa-bars"></i></button>
-        </div>
-        <div id="mobileMenu" class="fixed inset-0 bg-white z-50 transform translate-x-full transition-transform duration-300 md:hidden">
-            <div class="flex justify-end p-6"><button id="closeMenuBtn" class="text-2xl"><i class="fas fa-times"></i></button></div>
-            <div class="flex flex-col items-center gap-7 text-xl font-medium pt-10">
-                <a href="index.html">Home</a>
-                <a href="contact.html">Contact</a>
-                <a href="weather.html">Weather</a>
-                <a href="location.html">Location</a>
-                <div id="mobileAuthLinks" class="pt-4 flex flex-col gap-4 w-3/4"></div>
-            </div>
-        </div>
-    </nav>
+<main class="max-w-6xl mx-auto px-4 py-10">
+    <div class="card-default p-6">
+        <h1 class="text-2xl font-bold"><i class="fas fa-map-marked-alt text-[#6A4E8F] mr-2"></i> Your active ride</h1>
+        <div id="rideDetails" class="text-gray-500 mt-1 mb-4"></div>
+        <div id="map"></div>
+        <div id="etaPanel" class="mt-4 eta-card text-center"><p id="statusText" class="font-semibold">Loading...</p><p id="etaText" class="text-sm text-gray-600"></p></div>
+    </div>
+</main>
 
-    <main class="max-w-6xl mx-auto px-4 md:px-8 py-10">
-        <div class="card-default p-6 md:p-8">
-            <h1 class="text-3xl font-bold flex items-center gap-3"><i class="fas fa-map-marked-alt text-[#6A4E8F]"></i> Your ride is on the way</h1>
-            <div id="rideDetails" class="text-gray-500 mt-1 mb-4"></div>
-            <div id="map" class="rounded-2xl overflow-hidden shadow-lg"></div>
-            <div id="etaPanel" class="mt-4 eta-card text-center">
-                <p id="statusText" class="font-semibold">Loading ride data...</p>
-                <p id="etaText" class="text-sm text-gray-600"></p>
-            </div>
-        </div>
-    </main>
+<footer class="bg-gray-900 text-gray-300 py-12 mt-12"><div class="text-center text-xs text-gray-500">© 2025 SheDrives</div></footer>
 
-    <footer class="bg-gray-900 text-gray-300 py-12 mt-12">
-        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div><div class="flex items-center gap-2"><div class="w-8 h-8 rounded-full bg-white/20 flex justify-center items-center"><i class="fas fa-venus text-white"></i></div><span class="font-bold text-xl text-white">SheDrives</span></div><p class="text-sm mt-3">Safe rides, women drivers.</p></div>
-            <div><h4 class="font-semibold text-white">Company</h4><ul class="mt-3 space-y-2 text-sm"><li>About us</li><li>Safety center</li></ul></div>
-            <div><h4 class="font-semibold text-white">Support</h4><ul class="mt-3 space-y-2 text-sm"><li>Help center</li><li>Contact support</li></ul></div>
-            <div><h4 class="font-semibold text-white">Legal</h4><ul class="mt-3 space-y-2 text-sm"><li>Privacy policy</li></ul></div>
-        </div>
-        <div class="text-center text-xs text-gray-500 mt-8">© 2025 SheDrives — Live ride tracking</div>
-    </footer>
+<script src="auth.js"></script>
+<script>
+    // Mobile menu (same as before)
+    const menuBtn=document.getElementById('mobileMenuBtn'),closeBtn=document.getElementById('closeMenuBtn'),mobileMenu=document.getElementById('mobileMenu');
+    if(menuBtn&&closeBtn&&mobileMenu){menuBtn.onclick=()=>mobileMenu.classList.remove('translate-x-full');closeBtn.onclick=()=>mobileMenu.classList.add('translate-x-full');}
+    let rideData = JSON.parse(localStorage.getItem('activeRide'));
+    if(!rideData){ alert("No active ride."); window.location.href='index.html'; }
+    document.getElementById('rideDetails').innerHTML = `<i class="fas fa-map-pin text-[#6A4E8F]"></i> From: ${rideData.pickupAddress} → <i class="fas fa-flag-checkered text-green-600"></i> To: ${rideData.destinationAddress}`;
 
-    <script src="auth.js"></script>
-    <script>
-        // Mobile menu
-        const menuBtn = document.getElementById('mobileMenuBtn');
-        const closeBtn = document.getElementById('closeMenuBtn');
-        const mobileMenu = document.getElementById('mobileMenu');
-        if(menuBtn && closeBtn && mobileMenu) {
-            menuBtn.onclick = () => mobileMenu.classList.remove('translate-x-full');
-            closeBtn.onclick = () => mobileMenu.classList.add('translate-x-full');
-        }
+    let map, driverMarker, passengerMarker, routeLine, interval, driverRoute = [], driverIndex = 0, tripStarted = false;
 
-        // Get ride data from localStorage
-        const rideData = JSON.parse(localStorage.getItem('activeRide'));
-        if (!rideData) {
-            alert("No active ride found. Redirecting to home.");
-            window.location.href = 'index.html';
-        }
-
-        document.getElementById('rideDetails').innerHTML = `<i class="fas fa-map-pin text-[#6A4E8F] mr-1"></i> From: ${rideData.pickupAddress} → <i class="fas fa-flag-checkered text-green-600 ml-2 mr-1"></i> To: ${rideData.destinationAddress}`;
-
-        // Map setup
-        let map = L.map('map').setView([rideData.pickupLat, rideData.pickupLng], 13);
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; CartoDB'
-        }).addTo(map);
-
-        // Markers
-        let pickupMarker = L.marker([rideData.pickupLat, rideData.pickupLng], {
-            icon: L.divIcon({ className: 'custom-div-icon', html: '<div style="background-color:#22c55e; width:16px; height:16px; border-radius:50%; border:2px solid white; box-shadow:0 0 0 2px #22c55e;"></div>', iconSize: [16,16] })
-        }).addTo(map).bindPopup('Pickup').openPopup();
-
-        let destMarker = L.marker([rideData.destLat, rideData.destLng], {
-            icon: L.divIcon({ className: 'custom-div-icon', html: '<div style="background-color:#ef4444; width:16px; height:16px; border-radius:50%; border:2px solid white; box-shadow:0 0 0 2px #ef4444;"></div>', iconSize: [16,16] })
-        }).addTo(map).bindPopup('Destination');
-
-        // Passenger live location
-        let passengerMarker = null;
-        let driverMarker = null;
-        let currentRouteLine = null;
-        let watchId = null;
-        let driverInterval = null;
-        let tripStarted = false;
-        let driverCurrentIndex = 0;
-        let driverRoutePoints = [];
-        let passengerLat, passengerLng;
-
-        // Helper: get driving route (OSRM)
-        async function getRoute(startLat, startLng, endLat, endLng) {
-            const url = `https://router.project-osrm.org/route/v1/driving/${startLng},${startLat};${endLng},${endLat}?overview=full&geometries=geojson`;
-            const res = await fetch(url);
-            const data = await res.json();
-            if (data.code === 'Ok' && data.routes.length) {
-                return data.routes[0].geometry.coordinates.map(coord => [coord[1], coord[0]]);
-            }
-            return [];
-        }
-
-        // Draw route line
-        async function updateRouteLine(startLat, startLng, endLat, endLng) {
-            if (currentRouteLine) map.removeLayer(currentRouteLine);
-            const points = await getRoute(startLat, startLng, endLat, endLng);
-            if (points.length) {
-                currentRouteLine = L.polyline(points, { color: '#0077ff', weight: 5, opacity: 0.7 }).addTo(map);
-                return points;
-            }
-            return [];
-        }
-
-        // Start passenger tracking
-        function startPassengerTracking() {
-            if (watchId) navigator.geolocation.clearWatch(watchId);
-            watchId = navigator.geolocation.watchPosition(
-                (pos) => {
-                    passengerLat = pos.coords.latitude;
-                    passengerLng = pos.coords.longitude;
-                    if (passengerMarker) map.removeLayer(passengerMarker);
-                    passengerMarker = L.marker([passengerLat, passengerLng], {
-                        icon: L.divIcon({ className: 'custom-div-icon', html: '<div style="background-color:#6A4E8F; width:14px; height:14px; border-radius:50%; border:2px solid white; box-shadow:0 0 0 2px #6A4E8F;"></div>', iconSize: [14,14] })
-                    }).addTo(map).bindPopup('You are here').openPopup();
-                    if (!tripStarted) map.setView([passengerLat, passengerLng], 15);
-                },
-                (err) => { console.warn(err); },
-                { enableHighAccuracy: true, maximumAge: 5000, timeout: 10000 }
-            );
-        }
-
-        // Simulate driver movement
-        async function startDriverSimulation() {
-            // Driver starts from a random point near pickup (within 1km)
-            const offset = () => (Math.random() - 0.5) * 0.02; // ~2km random
-            let driverLat = rideData.pickupLat + offset();
-            let driverLng = rideData.pickupLng + offset();
-            
-            driverMarker = L.marker([driverLat, driverLng], {
-                icon: L.divIcon({ className: 'custom-div-icon', html: '<div style="background-color:#3b82f6; width:24px; height:24px; border-radius:50%; border:3px solid white; box-shadow:0 0 0 2px #3b82f6;"></div>', iconSize: [24,24] })
-            }).addTo(map).bindPopup('Driver');
-
-            // Get route from driver start to pickup
-            let route = await getRoute(driverLat, driverLng, rideData.pickupLat, rideData.pickupLng);
-            if (route.length === 0) {
-                document.getElementById('statusText').innerText = "Error calculating route. Please try again.";
-                return;
-            }
-            driverRoutePoints = route;
-            driverCurrentIndex = 0;
-            let totalDistance = calculatePolylineDistance(driverRoutePoints);
-            let speedKmPerH = 30; // 30 km/h simulation
-            let stepTime = 1000; // move every 1 second
-            let distancePerStep = (speedKmPerH * 1000 / 3600) * (stepTime / 1000); // meters per step
-            let totalSteps = totalDistance * 1000 / distancePerStep;
-            let stepIndex = 0;
-
-            function moveDriver() {
-                if (!driverRoutePoints.length) return;
-                if (stepIndex >= driverRoutePoints.length - 1) {
-                    // Driver reached pickup
-                    clearInterval(driverInterval);
-                    document.getElementById('statusText').innerHTML = "✅ Driver has arrived! Starting your trip...";
-                    setTimeout(() => startTrip(), 2000);
-                    return;
-                }
-                stepIndex = Math.min(stepIndex + 1, driverRoutePoints.length - 1);
-                const newPos = driverRoutePoints[stepIndex];
-                driverMarker.setLatLng(newPos);
-                map.setView(newPos, 15);
-                // Update ETA
-                const remainingPoints = driverRoutePoints.slice(stepIndex);
-                const remainingDist = calculatePolylineDistance(remainingPoints);
-                const etaMinutes = Math.ceil((remainingDist / speedKmPerH) * 60);
-                document.getElementById('etaText').innerHTML = `⏱️ Driver ETA: ~${etaMinutes} min`;
-                if (remainingDist < 0.1) document.getElementById('etaText').innerHTML = `🚗 Driver is arriving now`;
-            }
-
-            driverInterval = setInterval(moveDriver, stepTime);
-        }
-
-        function calculatePolylineDistance(points) {
-            let dist = 0;
-            for (let i = 0; i < points.length - 1; i++) {
-                dist += getDistanceFromLatLonInKm(points[i][0], points[i][1], points[i+1][0], points[i+1][1]);
-            }
-            return dist;
-        }
-        function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
-            const R = 6371;
-            const dLat = (lat2 - lat1) * Math.PI / 180;
-            const dLon = (lon2 - lon1) * Math.PI / 180;
-            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-                      Math.cos(lat1 * Math.PI/180) * Math.cos(lat2 * Math.PI/180) *
-                      Math.sin(dLon/2) * Math.sin(dLon/2);
-            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-            return R * c;
-        }
-
-        async function startTrip() {
-            tripStarted = true;
-            document.getElementById('statusText').innerHTML = "🚖 On your way to destination!";
-            // Get route from current passenger location to destination
-            if (!passengerLat || !passengerLng) {
-                passengerLat = rideData.pickupLat;
-                passengerLng = rideData.pickupLng;
-            }
-            const routeToDest = await getRoute(passengerLat, passengerLng, rideData.destLat, rideData.destLng);
-            if (routeToDest.length === 0) return;
-            if (currentRouteLine) map.removeLayer(currentRouteLine);
-            currentRouteLine = L.polyline(routeToDest, { color: '#0077ff', weight: 5, opacity: 0.8 }).addTo(map);
-            map.fitBounds(currentRouteLine.getBounds());
-            
-            // Move driver along this route (simulate driving)
-            if (driverInterval) clearInterval(driverInterval);
-            let tripPoints = routeToDest;
-            let tripIndex = 0;
-            let speed = 40; // km/h
-            const stepTime = 1000;
-            function moveDriverOnTrip() {
-                if (tripIndex >= tripPoints.length - 1) {
-                    clearInterval(driverInterval);
-                    document.getElementById('statusText').innerHTML = "📍 You have reached your destination!";
-                    document.getElementById('etaText').innerHTML = "Trip completed. Thank you for riding with SheDrives.";
-                    return;
-                }
-                tripIndex++;
-                driverMarker.setLatLng(tripPoints[tripIndex]);
-                // Update ETA
-                const remaining = tripPoints.slice(tripIndex);
-                const distRemaining = calculatePolylineDistance(remaining);
-                const etaMin = Math.ceil((distRemaining / speed) * 60);
-                document.getElementById('etaText').innerHTML = `⏱️ ETA to destination: ~${etaMin} min`;
-                if (distRemaining < 0.1) document.getElementById('etaText').innerHTML = "Almost there!";
-            }
-            driverInterval = setInterval(moveDriverOnTrip, stepTime);
-        }
-
-        // Initialization
+    function initMap(){
+        map = L.map('map').setView([rideData.pickupLat, rideData.pickupLng], 13);
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'&copy; OSM'}).addTo(map);
+        L.marker([rideData.pickupLat, rideData.pickupLng],{icon:L.divIcon({html:'<div style="background:#22c55e; width:16px;height:16px;border-radius:50%;border:2px solid white;"></div>',iconSize:[16,16]})}).addTo(map).bindPopup('Pickup');
+        L.marker([rideData.destLat, rideData.destLng],{icon:L.divIcon({html:'<div style="background:#ef4444; width:16px;height:16px;border-radius:50%;border:2px solid white;"></div>',iconSize:[16,16]})}).addTo(map).bindPopup('Destination');
         startPassengerTracking();
         startDriverSimulation();
-        // Draw initial route from pickup to destination for reference (optional)
-        updateRouteLine(rideData.pickupLat, rideData.pickupLng, rideData.destLat, rideData.destLng);
-    </script>
+    }
+
+    function startPassengerTracking(){
+        if(navigator.geolocation){
+            navigator.geolocation.watchPosition(pos=>{
+                let {latitude:lat, longitude:lng}=pos.coords;
+                if(passengerMarker) map.removeLayer(passengerMarker);
+                passengerMarker = L.marker([lat,lng],{icon:L.divIcon({html:'<div style="background:#6A4E8F; width:14px;height:14px;border-radius:50%;border:2px solid white;"></div>',iconSize:[14,14]})}).addTo(map).bindPopup('You');
+            },null,{enableHighAccuracy:true});
+        }
+    }
+
+    async function getRoute(startLat,startLng,endLat,endLng){
+        let url=`https://router.project-osrm.org/route/v1/driving/${startLng},${startLat};${endLng},${endLat}?overview=full&geometries=geojson`;
+        let res=await fetch(url);
+        let data=await res.json();
+        if(data.code==='Ok' && data.routes.length) return data.routes[0].geometry.coordinates.map(c=>[c[1],c[0]]);
+        return [];
+    }
+
+    function dist(p1,p2){ let R=6371; let dLat=(p2[0]-p1[0])*Math.PI/180; let dLng=(p2[1]-p1[1])*Math.PI/180; let a=Math.sin(dLat/2)**2+Math.cos(p1[0]*Math.PI/180)*Math.cos(p2[0]*Math.PI/180)*Math.sin(dLng/2)**2; return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));}
+    function polylineDistance(points){ let d=0; for(let i=0;i<points.length-1;i++) d+=dist(points[i],points[i+1]); return d;}
+
+    async function startDriverSimulation(){
+        let fullRoute = await getRoute(rideData.pickupLat, rideData.pickupLng, rideData.destLat, rideData.destLng);
+        if(fullRoute.length){
+            routeLine = L.polyline(fullRoute, {color:'#0077ff', weight:5, opacity:0.7}).addTo(map);
+            map.fitBounds(routeLine.getBounds());
+        }
+        let offset=()=>(Math.random()-0.5)*0.02;
+        let start=[rideData.pickupLat+offset(), rideData.pickupLng+offset()];
+        driverRoute = await getRoute(start[0],start[1], rideData.pickupLat, rideData.pickupLng);
+        if(!driverRoute.length) return;
+        driverIndex=0;
+        driverMarker = L.marker(driverRoute[0],{icon:L.divIcon({html:'<div style="background:#3b82f6; width:24px;height:24px;border-radius:50%;border:3px solid white;"></div>',iconSize:[24,24]})}).addTo(map);
+        let speed=30, idx=0;
+        interval=setInterval(()=>{
+            if(idx>=driverRoute.length-1){
+                clearInterval(interval);
+                document.getElementById('statusText').innerHTML="✅ Driver arrived! Starting trip...";
+                setTimeout(()=>startTrip(),2000);
+                return;
+            }
+            idx++;
+            driverMarker.setLatLng(driverRoute[idx]);
+            let remaining=driverRoute.slice(idx);
+            let remDist=polylineDistance(remaining);
+            let eta=Math.ceil((remDist/speed)*60);
+            document.getElementById('etaText').innerHTML=`⏱️ Driver ETA: ~${eta} min`;
+            if(remDist<0.1) document.getElementById('etaText').innerHTML="🚗 Driver is arriving now";
+        },1000);
+    }
+
+    async function startTrip(){
+        if(interval) clearInterval(interval);
+        let startPos = passengerMarker ? passengerMarker.getLatLng() : {lat:rideData.pickupLat, lng:rideData.pickupLng};
+        let routeToDest = await getRoute(startPos.lat, startPos.lng, rideData.destLat, rideData.destLng);
+        if(!routeToDest.length) return;
+        if(routeLine) map.removeLayer(routeLine);
+        routeLine = L.polyline(routeToDest, {color:'#0077ff', weight:5, opacity:0.8}).addTo(map);
+        map.fitBounds(routeLine.getBounds());
+        driverRoute = routeToDest; driverIndex=0; driverMarker.setLatLng(driverRoute[0]);
+        document.getElementById('statusText').innerHTML="🚖 On your way to destination!";
+        let speed=40, idx=0;
+        interval=setInterval(()=>{
+            if(idx>=driverRoute.length-1){
+                clearInterval(interval);
+                document.getElementById('statusText').innerHTML="📍 Trip completed!";
+                document.getElementById('etaText').innerHTML="Thank you for riding.";
+                return;
+            }
+            idx++;
+            driverMarker.setLatLng(driverRoute[idx]);
+            let remaining=driverRoute.slice(idx);
+            let remDist=polylineDistance(remaining);
+            let eta=Math.ceil((remDist/speed)*60);
+            document.getElementById('etaText').innerHTML=`⏱️ ETA to destination: ~${eta} min`;
+        },1000);
+    }
+
+    window.addEventListener('load',initMap);
+</script>
 </body>
 </html>
