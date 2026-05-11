@@ -102,6 +102,197 @@
             transform: translateY(-2px);
             box-shadow: 0 10px 20px -5px rgba(0,0,0,0.2);
         }
+        .chatbot-container {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 9999;
+        font-family: 'Inter', sans-serif;
+    }
+    .chatbot-button {
+        width: 55px;
+        height: 55px;
+        background: linear-gradient(135deg, #6A4E8F, #A280C9);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        transition: all 0.2s;
+        color: white;
+        font-size: 26px;
+    }
+    .chatbot-button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 25px rgba(106,78,143,0.4);
+    }
+    .chatbot-window {
+        position: fixed;
+        bottom: 85px;
+        right: 20px;
+        width: 360px;
+        max-width: calc(100% - 40px);
+        height: 520px;
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(20px);
+        z-index: 9998;
+        border: 1px solid rgba(106,78,143,0.2);
+    }
+    .chatbot-window.open {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+    .chatbot-header {
+        background: linear-gradient(135deg, #2A1E3D, #6A4E8F);
+        color: white;
+        padding: 12px 16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        min-width: 0;
+    }
+    .chatbot-header h3 {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 600;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        flex: 1;
+    }
+    .chatbot-header button {
+        background: rgba(255,255,255,0.2);
+        border: none;
+        color: white;
+        font-size: 20px;
+        font-weight: bold;
+        cursor: pointer;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        transition: background 0.2s;
+        padding: 0;
+        margin: 0;
+        flex-shrink: 0;
+        line-height: 1;
+    }
+    .chatbot-header button:hover {
+        background: rgba(255,255,255,0.4);
+    }
+    .chatbot-messages {
+        flex: 1;
+        padding: 15px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        background: #f9f9fc;
+    }
+    .message {
+        max-width: 85%;
+        padding: 8px 12px;
+        border-radius: 18px;
+        font-size: 0.85rem;
+        line-height: 1.4;
+        word-wrap: break-word;
+    }
+    .message.user {
+        background: #6A4E8F;
+        color: white;
+        align-self: flex-end;
+        border-bottom-right-radius: 4px;
+    }
+    .message.bot {
+        background: #e9e9ef;
+        color: #333;
+        align-self: flex-start;
+        border-bottom-left-radius: 4px;
+    }
+    .quick-replies {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 8px;
+    }
+    .quick-reply-btn {
+        background: white;
+        border: 1px solid #6A4E8F;
+        color: #6A4E8F;
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 0.7rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        white-space: nowrap;
+    }
+    .quick-reply-btn:hover {
+        background: #6A4E8F;
+        color: white;
+    }
+    .chatbot-input {
+        display: flex;
+        padding: 10px;
+        border-top: 1px solid #eee;
+        background: white;
+    }
+    .chatbot-input input {
+        flex: 1;
+        border: 1px solid #ddd;
+        border-radius: 25px;
+        padding: 8px 12px;
+        outline: none;
+        font-size: 0.85rem;
+    }
+    .chatbot-input input:focus {
+        border-color: #6A4E8F;
+        box-shadow: 0 0 0 2px rgba(106,78,143,0.2);
+    }
+    .chatbot-input button {
+        background: #6A4E8F;
+        border: none;
+        color: white;
+        border-radius: 50%;
+        width: 34px;
+        height: 34px;
+        margin-left: 6px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s;
+    }
+    .chatbot-input button:hover {
+        background: #5a3d7a;
+    }
+    @media (max-width: 480px) {
+        .chatbot-window {
+            width: calc(100% - 30px);
+            right: 15px;
+            bottom: 75px;
+            height: 480px;
+        }
+        .quick-reply-btn {
+            white-space: normal;
+            font-size: 0.65rem;
+        }
+        .chatbot-header h3 {
+            font-size: 0.9rem;
+        }
+    }
     </style>
 </head>
 <body class="antialiased">
@@ -348,15 +539,42 @@
                 <p class="text-purple-100 text-lg mt-3 max-w-2xl mx-auto">Be part of a community that prioritizes safety, comfort, and empowerment. Download the app and start your journey today.</p>
                 <div class="flex flex-wrap justify-center gap-4 mt-8">
                     <button onclick="window.open('https://www.apple.com/app-store/', '_blank')" class="cta-button bg-white text-[#6A4E8F] px-6 py-3 rounded-xl font-bold shadow-md hover:shadow-xl transition flex items-center gap-2">
-                        <i class="fab fa-apple text-2xl"></i> App Store
+                         JOIN OUR DISCORD
                     </button>
                     <button onclick="window.open('https://play.google.com/store/games?hl=en', '_blank')" class="cta-button bg-white/20 backdrop-blur-sm text-white px-6 py-3 rounded-xl font-bold border border-white/40 flex items-center gap-2 hover:bg-white/30 transition">
-                        <i class="fab fa-google-play text-2xl"></i> Google Play
+                         JOIN TELEGRAM
                     </button>
                 </div>
             </div>
         </section>
     </main>
+
+    <div class="chatbot-container">
+    <div class="chatbot-button" id="chatbotToggleBtn">
+        <i class="fas fa-comment-dots"></i>
+    </div>
+    <div class="chatbot-window" id="chatbotWindow">
+        <div class="chatbot-header">
+            <h3><i class="fas fa-robot mr-2"></i> FemGO Assistant</h3>
+            <button id="chatbotCloseBtn">&times;</button>
+        </div>
+        <div class="chatbot-messages" id="chatbotMessages">
+            <div class="message bot">👋 Hi! I'm FemGO Assistant. I'm here to help 24/7. You can ask me about:</div>
+            <div class="quick-replies" id="initialQuickReplies">
+                <button class="quick-reply-btn" data-msg="How to book a ride?">🚖 Book a ride</button>
+                <button class="quick-reply-btn" data-msg="SOS emergency">🆘 SOS emergency</button>
+                <button class="quick-reply-btn" data-msg="Become a driver">👩‍✈️ Become a driver</button>
+                <button class="quick-reply-btn" data-msg="Safety features">🛡️ Safety</button>
+                <button class="quick-reply-btn" data-msg="Pricing and fares">💰 Pricing</button>
+                <button class="quick-reply-btn" data-msg="Contact support">📞 Contact support</button>
+            </div>
+        </div>
+        <div class="chatbot-input">
+            <input type="text" id="chatbotInput" placeholder="Type your message..." autocomplete="off">
+            <button id="chatbotSendBtn"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+</div>
 
     <!-- ================= FOOTER ================= -->
     <footer class="bg-gray-900 text-gray-300 pt-14 pb-6">
@@ -430,6 +648,169 @@
 
     <script src="auth.js"></script>
     <script>
+
+
+(function() {
+        const toggleBtn = document.getElementById('chatbotToggleBtn');
+        const closeBtn = document.getElementById('chatbotCloseBtn');
+        const windowEl = document.getElementById('chatbotWindow');
+        const messagesContainer = document.getElementById('chatbotMessages');
+        const input = document.getElementById('chatbotInput');
+        const sendBtn = document.getElementById('chatbotSendBtn');
+
+        // Open / close functions
+        function openChat() {
+            windowEl.classList.add('open');
+        }
+        function closeChat() {
+            windowEl.classList.remove('open');
+        }
+        function toggleChat() {
+            if (windowEl.classList.contains('open')) {
+                closeChat();
+            } else {
+                openChat();
+            }
+        }
+
+        // Attach events (using onclick to be bulletproof)
+        toggleBtn.onclick = toggleChat;
+        closeBtn.onclick = closeChat;
+
+        function addMessage(text, sender, quickReplies = null) {
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `message ${sender}`;
+            msgDiv.innerText = text;
+            messagesContainer.appendChild(msgDiv);
+            if (quickReplies && sender === 'bot') {
+                const repliesDiv = document.createElement('div');
+                repliesDiv.className = 'quick-replies';
+                quickReplies.forEach(q => {
+                    const btn = document.createElement('button');
+                    btn.className = 'quick-reply-btn';
+                    btn.innerText = q;
+                    btn.setAttribute('data-msg', q);
+                    btn.onclick = () => {
+                        input.value = q;
+                        sendMessage();
+                    };
+                    repliesDiv.appendChild(btn);
+                });
+                messagesContainer.appendChild(repliesDiv);
+            }
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function getBotReply(userMessage) {
+            const msg = userMessage.toLowerCase().trim();
+            // Booking
+            if (msg.includes('book') || msg.includes('ride') || msg.includes('vehicle') || msg.includes('how to')) {
+                return "🚖 To book a ride:\n1. Go to homepage and scroll to 'Choose your ride'.\n2. Select a vehicle (Economy, Comfort, Van, or Scooty).\n3. Enter your pickup and destination (use 'Get location' for pickup).\n4. Click 'Find my ride' – we'll match you with a female driver.\n5. After driver accepts, you'll see live tracking with ETA.\n\nNeed help with something else?";
+            }
+            // SOS
+            if (msg.includes('sos') || msg.includes('emergency') || msg.includes('help')) {
+                return "🆘 **SOS Emergency**\n- Press the red 'SOS Emergency' button on the homepage.\n- Your live location will be shared with nearest police station (simulated).\n- Your phone dialer will open with emergency number 112.\n- We also store your SOS alert locally for records.\n\n⚠️ Only use in real emergencies. Stay safe!";
+            }
+            // Driver application
+            if (msg.includes('driver') || msg.includes('apply') || msg.includes('become a driver')) {
+                return "🚗 **Become a FemGO Driver**\n\nRequirements:\n✅ Valid driving license (1+ year)\n✅ Age 21+\n✅ Clean driving record\n✅ Four-door vehicle (2010+)\n✅ Vehicle registration & insurance\n✅ Pass background check\n\n**How to apply:**\nClick 'Apply to drive' on homepage or go to drive.html. Fill the form with:\n- Full name, CNIC, email, phone, address\n- License number, experience, vehicle details\n- Upload CNIC front/back & passport photo\n\nAfter submission, our team will review and contact you within 3-5 days.";
+            }
+            // Safety
+            if (msg.includes('safety') || msg.includes('secure') || msg.includes('safe')) {
+                return "🛡️ **Safety Features**\n✅ All drivers are female & background-checked\n✅ Live trip sharing with trusted contacts\n✅ SOS emergency button (location + police dialer)\n✅ 24/7 women support team\n✅ Strict verification process\n✅ In-app emergency tools\n\nYour safety is our top priority!";
+            }
+            // Pricing / fares
+            if (msg.includes('price') || msg.includes('cost') || msg.includes('fare') || msg.includes('pricing')) {
+                return "💰 **FemGO Pricing**\n\n🛵 Scooty: ₹49 base fare\n🚗 Economy (Suzuki Alto): ₹99 base\n🚙 Comfort (Honda City): ₹199 base\n🚐 Van (Toyota Innova): ₹349 base\n\n*Base fare includes first 2 km. Additional distance charged per km. Final fare shown before booking.*";
+            }
+            // Cancellation
+            if (msg.includes('cancel') || msg.includes('cancellation')) {
+                return "❌ **Cancellation Policy**\n- Free cancellation within 2 minutes of booking.\n- After 2 minutes, ₹20 cancellation fee applies.\n- If driver is already en route, full base fare may be charged.\n\nTo cancel, contact support via Contact page.";
+            }
+            // Payment methods
+            if (msg.includes('payment') || msg.includes('pay') || msg.includes('cash') || msg.includes('card')) {
+                return "💳 **Payment Methods**\nWe accept:\n- Cash (pay driver directly)\n- Credit/Debit cards (Visa, Mastercard)\n- Mobile wallets (JazzCash, Easypaisa)\n- UPI / bank transfer\n\nAll payments are secure and cashless options are preferred.";
+            }
+            // Ride history
+            if (msg.includes('history') || msg.includes('past rides') || msg.includes('receipt')) {
+                return "📜 **Ride History**\nYour past rides are stored in your account. To view:\n1. Log in to your account.\n2. Click your profile name in the navbar.\n3. Select 'Ride History' (coming soon).\n\nFor now, you can check localStorage under 'femgoRideHistory' (developer view). We'll add a dedicated page soon!";
+            }
+            // Promo / discount
+            if (msg.includes('promo') || msg.includes('discount') || msg.includes('coupon')) {
+                return "🎟️ **Promotions & Discounts**\nCurrently we have:\n- First ride: 20% off (use code FEMGO20)\n- Refer a friend: ₹50 off for both\n- Weekly bonus: Complete 5 rides get ₹100 cashback\n\nMore offers coming soon!";
+            }
+            // Vehicle types
+            if (msg.includes('vehicle') || msg.includes('car') || msg.includes('type')) {
+                return "🚘 **Vehicle Types**\n- Economy: Suzuki Alto (budget, 4 seats)\n- Comfort: Honda City (AC, WiFi, 4 seats)\n- Van: Toyota Innova (groups, 6-7 seats)\n- Scooty: Electric/Petrol (1 pillion, 80km range)\n\nAll vehicles are driven by verified female drivers.";
+            }
+            // Tracking
+            if (msg.includes('track') || msg.includes('tracking') || msg.includes('map')) {
+                return "📍 **Live Tracking**\nAfter booking, you'll see:\n- Map with pickup (green) & destination (red)\n- Blue route following actual roads (OSRM)\n- Driver's moving position (blue car icon)\n- ETA countdown\n- Option to share ride via WhatsApp\n\nWhen driver arrives, trip starts and destination ETA updates.";
+            }
+            // Weather
+            if (msg.includes('weather') || msg.includes('temperature')) {
+                return "☀️ **Weather Page**\nCheck real-time weather for any city:\n- Current temperature, humidity, wind\n- Hourly forecast (next 12 hours)\n- 3‑day forecast\n- Light blue animated background\n\nUse 'My location' button to see weather where you are.";
+            }
+            // Contact
+            if (msg.includes('contact') || msg.includes('support') || msg.includes('help')) {
+                return "📞 **Contact Support**\n- Use the Contact page form (login required)\n- Email: support@femgo.com\n- WhatsApp: +92 300 123 4567\n- Emergency: Press SOS button\n\nWe reply within 24 hours for general inquiries.";
+            }
+            // Location map
+            if (msg.includes('location') || msg.includes('map page') || msg.includes('street')) {
+                return "🗺️ **Location Map Page**\n- Interactive map with streets, shops, hospitals, schools\n- Click 'Get My Current Location' to center on you\n- Uses OpenStreetMap – free and private\n- Perfect for finding nearby landmarks.";
+            }
+            // General greeting
+            if (msg.includes('hello') || msg.includes('hi') || msg.includes('hey') || msg.includes('namaste')) {
+                return "Hello! 😊 I'm FemGO Assistant. Ask me anything about rides, safety, driver application, pricing, tracking, weather, or support. What would you like to know?";
+            }
+            if (msg.includes('thank')) {
+                return "You're very welcome! If you have more questions, just ask. Safe travels with FemGO! 🚖";
+            }
+            if (msg.includes('bye') || msg.includes('goodbye')) {
+                return "Goodbye! 👋 Have a safe ride. Come back anytime!";
+            }
+            return "I'm here to help! You can ask me about:\n• Booking a ride\n• SOS emergency\n• Becoming a driver\n• Safety features\n• Pricing & payment\n• Ride tracking\n• Weather\n• Contact support\n• Location map\n\nWhat would you like to know?";
+        }
+
+        function sendMessage() {
+            const userText = input.value.trim();
+            if (userText === "") return;
+            addMessage(userText, 'user');
+            input.value = '';
+            setTimeout(() => {
+                const reply = getBotReply(userText);
+                let quickOptions = null;
+                if (userText.toLowerCase().includes('book')) {
+                    quickOptions = ["How to choose vehicle?", "Price?", "Cancel ride?"];
+                } else if (userText.toLowerCase().includes('driver')) {
+                    quickOptions = ["Requirements", "How to apply", "Benefits"];
+                } else if (userText.toLowerCase().includes('sos')) {
+                    quickOptions = ["What happens after SOS?", "Is it real?"];
+                } else if (userText.toLowerCase().includes('price')) {
+                    quickOptions = ["Scooty price", "Economy price", "Comfort price"];
+                } else {
+                    quickOptions = ["Book a ride", "SOS emergency", "Become a driver"];
+                }
+                addMessage(reply, 'bot', quickOptions);
+            }, 500);
+        }
+
+        sendBtn.onclick = sendMessage;
+        input.onkeypress = (e) => {
+            if (e.key === 'Enter') sendMessage();
+        };
+
+        // Quick reply buttons from initial message
+        document.querySelectorAll('.quick-reply-btn').forEach(btn => {
+            btn.onclick = () => {
+                const preset = btn.getAttribute('data-msg');
+                if (preset) {
+                    input.value = preset;
+                    sendMessage();
+                }
+            };
+        });
+    })();
         // ================= MOBILE MENU =================
         const menuBtn = document.getElementById('mobileMenuBtn');
         const closeBtn = document.getElementById('closeMenuBtn');
